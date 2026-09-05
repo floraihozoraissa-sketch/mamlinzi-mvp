@@ -1,22 +1,23 @@
 const supabase = require("../config/supabase");
 
-const createFollowup = async (req, res) => {
-  try {
-    const {
-      motherId,
-      chwId,
-      assessmentId,
-      action,
-      status,
-      notes,
-    } = req.body;
+async function createFollowup(req, res) {
+  const {
+    motherId,
+    assessmentId,
+    action,
+    status,
+    notes
+  } = req.body;
 
-    if (!motherId || !chwId || !action) {
-      return res.status(400).json({
-        success: false,
-        message: "Mother ID, CHW ID, and action are required.",
-      });
-    }
+  if (!motherId || !action) {
+    return res.status(400).json({
+      error: "Mother and action are required."
+    });
+  }
+
+  try {
+    // IMPORTANT: derive CHW identity from the authenticated user
+    const chwId = req.user.id;
 
     const { data, error } = await supabase
       .from("followups")
@@ -25,34 +26,34 @@ const createFollowup = async (req, res) => {
         chw_id: chwId,
         assessment_id: assessmentId || null,
         action,
-        status: status || "pending",
-        notes: notes || null,
+        status: status || "completed",
+        notes: notes || null
       })
       .select()
       .single();
 
     if (error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
+      console.error("FOLLOW-UP DATABASE ERROR:", error);
+
+      return res.status(400).json({
+        error: error.message
       });
     }
 
-    res.status(201).json({
-      success: true,
+    return res.status(201).json({
       message: "Follow-up recorded successfully.",
-      followup: data,
+      followup: data
     });
-  } catch (error) {
-    console.error("Follow-up error:", error);
 
-    res.status(500).json({
-      success: false,
-      message: "Unable to record follow-up.",
+  } catch (error) {
+    console.error("FOLLOW-UP ERROR:", error);
+
+    return res.status(500).json({
+      error: "An unexpected error occurred while recording the follow-up."
     });
   }
-};
+}
 
 module.exports = {
-  createFollowup,
+  createFollowup
 };

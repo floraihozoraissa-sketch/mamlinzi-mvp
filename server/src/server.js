@@ -8,6 +8,11 @@ const cors = require("cors");
 
 const supabase = require("./config/supabase");
 const authRoutes = require("./routes/auth");
+const intelligenceRoutes =
+  require("./routes/intelligenceRoutes");
+
+const motherRoutes =
+  require("./routes/motherRoutes");
 
 const app = express();
 
@@ -17,6 +22,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/checkins", checkinRoutes);
 app.use("/api/chw", chwRoutes);
 app.use("/api/followups", followupRoutes);
+app.use("/api/intelligence",intelligenceRoutes);
+app.use(
+  "/api/mother",
+  motherRoutes
+);
 
 app.get("/", (req, res) => {
   res.json({

@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Brand */
+  --mm-purple: #6A1B9A;
+  --mm-purple-dark: #53147A;
+  --mm-purple-light: #F3E8F8;
+
+  --mm-teal: #00A896;
+  --mm-teal-light: #E5F7F4;
+
+  /* Status */
+  --mm-high: #DC2F34;
+  --mm-high-light: #FFF0F1;
+
+  --mm-medium: #F5A623;
+  --mm-medium-light: #FFF7E8;
+
+  --mm-low: #00A896;
+  --mm-low-light: #E5F7F4;
+
+  /* Neutrals */
+  --mm-background: #F7F8FA;
+  --mm-white: #FFFFFF;
+  --mm-text: #252B3A;
+  --mm-text-secondary: #718096;
+  --mm-border: #E8EAF0;
+
+  /* Shape */
+  --mm-radius-sm: 10px;
+  --mm-radius-md: 14px;
+  --mm-radius-lg: 20px;
+
+  /* Shadows */
+  --mm-shadow:
+    0 4px 20px rgba(37, 43, 58, 0.06);
+
+  --mm-shadow-hover:
+    0 8px 28px rgba(37, 43, 58, 0.10);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: var(--mm-background);
+  color: var(--mm-text);
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}

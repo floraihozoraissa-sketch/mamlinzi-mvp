@@ -6,6 +6,8 @@ import CHWLogin from "./pages/chw/CHWLogin";
 import MotherLogin from "./pages/mother/MotherLogin";
 import HealthCheckin from "./pages/mother/HealthCheckin";
 import MotherDashboard from "./pages/mother/MotherDashboard";
+import IntelligenceLogin from "./pages/intelligence/IntelligenceLogin";
+import IntelligenceDashboard from "./pages/intelligence/intelligenceDashboard";
 
 
 function App() {
@@ -38,6 +40,16 @@ function App() {
 <Route
   path="/mother/checkin"
   element={<HealthCheckin />}
+/>
+
+<Route
+  path="/intelligence/login"
+  element={<IntelligenceLogin />}
+/>
+
+<Route
+  path="/intelligence"
+  element={<IntelligenceDashboard />}
 />
       </Routes>
     </BrowserRouter>
