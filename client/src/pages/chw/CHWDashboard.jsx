@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CHWDashboard() {
   const [cases, setCases] = useState([]);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -123,9 +125,15 @@ function CHWDashboard() {
                     "No recommendation available."}
                 </p>
 
-                <button>
-                  View Case
-                </button>
+                <button
+  onClick={() =>
+    navigate("/chw/case", {
+      state: { caseItem },
+    })
+  }
+>
+  View Case
+</button>
               </article>
             );
           })}

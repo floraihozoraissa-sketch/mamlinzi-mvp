@@ -1,27 +1,24 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function MotherRegistration() {
-  const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    password: "",
-  });
+  const navigate = useNavigate();
 
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
-  };
+  const handleRegister = async (e) => {
+    e.preventDefault();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+    setError("");
+    setSuccess("");
     setLoading(true);
-    setMessage("");
 
     try {
       const response = await fetch(
@@ -29,76 +26,127 @@ function MotherRegistration() {
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json"
           },
-          body: JSON.stringify(form),
+          body: JSON.stringify({
+            fullName,
+            email,
+            phone,
+            password
+          })
         }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Registration failed.");
+        setError(data.error || "Registration failed.");
+        setLoading(false);
+        return;
       }
 
-      setMessage("Account created successfully!");
+      setSuccess(
+        "Registration successful! You can now sign in."
+      );
 
-      setForm({
-        fullName: "",
-        phone: "",
-        password: "",
-      });
+      setTimeout(() => {
+        navigate("/mother/login");
+      }, 1000);
+
     } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setLoading(false);
+      console.error(error);
+      setError(
+        "Could not connect to the MaMlinzi server."
+      );
     }
+
+    setLoading(false);
   };
 
   return (
     <div>
-      <h1>Create your MaMlinzi account</h1>
+      <h1>MaMlinzi Mother Registration</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleRegister}>
+
         <div>
-          <label>Full name</label>
+          <label>Full Name</label>
+
           <input
             type="text"
-            name="fullName"
-            value={form.fullName}
-            onChange={handleChange}
+            value={fullName}
+            onChange={(e) =>
+              setFullName(e.target.value)
+            }
+            placeholder="Enter your full name"
             required
           />
         </div>
 
         <div>
-          <label>Phone number</label>
+          <label>Email</label>
+
+          <input
+            type="email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div>
+          <label>Phone Number</label>
+
           <input
             type="tel"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
+            value={phone}
+            onChange={(e) =>
+              setPhone(e.target.value)
+            }
+            placeholder="+250..."
             required
           />
         </div>
 
         <div>
           <label>Password</label>
+
           <input
             type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            placeholder="Create a password"
             required
           />
         </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Creating account..." : "Create Account"}
-        </button>
-      </form>
+        {error && (
+          <p style={{ color: "red" }}>
+            {error}
+          </p>
+        )}
 
-      {message && <p>{message}</p>}
+        {success && (
+          <p style={{ color: "green" }}>
+            {success}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+        >
+          {loading
+            ? "Creating account..."
+            : "Create Account"}
+        </button>
+
+      </form>
     </div>
   );
 }

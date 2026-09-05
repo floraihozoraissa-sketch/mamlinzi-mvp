@@ -1,10 +1,9 @@
 const express = require("express");
-const {
-  createCheckin,
-} = require("../controllers/checkinController");
-
 const router = express.Router();
 
-router.post("/", createCheckin);
+const requireAuth = require("../middleware/authMiddleware");
+const { createCheckin } = require("../controllers/checkinController");
+
+router.post("/", requireAuth, createCheckin);
 
 module.exports = router;

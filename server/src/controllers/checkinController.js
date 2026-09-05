@@ -3,14 +3,20 @@ const { assessRisk } = require("../services/mrieService");
 
 const createCheckin = async (req, res) => {
   try {
-    const { motherId, responses } = req.body;
+    const { data: motherProfile, error: motherError } =
+  await supabase
+    .from("mother_profiles")
+    .select("id")
+    .eq("user_id", req.user.id)
+    .single();
 
-    if (!motherId || !responses) {
-      return res.status(400).json({
-        success: false,
-        message: "Mother ID and responses are required."
-      });
-    }
+if (motherError || !motherProfile) {
+  return res.status(404).json({
+    error: "Maternal profile not found."
+  });
+}
+
+const motherId = motherProfile.id;
 
     // 1. Save the health check-in
     const { data: checkin, error: checkinError } = await supabase

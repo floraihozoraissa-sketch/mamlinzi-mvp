@@ -4,88 +4,88 @@ const supabase = require("../config/supabase");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
+  const {
+    fullName,
+    email,
+    phone,
+    password
+  } = req.body;
+
+  if (!fullName || !email || !phone || !password) {
+    return res.status(400).json({
+      error: "Full name, email, phone and password are required."
+    });
+  }
+
   try {
-    const { fullName, phone, password } = req.body;
-
-    // Validate required fields
-    if (!fullName || !phone || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "Full name, phone, and password are required.",
-      });
-    }
-
-    // Create account using Supabase Auth
+    // 1. Create Supabase Auth user
     const { data: authData, error: authError } =
       await supabase.auth.admin.createUser({
+        email,
         password,
-        phone,
-        phone_confirm: true,
+        email_confirm: true
       });
 
     if (authError) {
       return res.status(400).json({
-        success: false,
-        message: authError.message,
+        error: authError.message
       });
     }
 
     const userId = authData.user.id;
 
-    // Create the user's profile
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .insert({
-        id: userId,
-        full_name: fullName,
-        role: "mother",
-        phone,
-      })
-      .select()
-      .single();
+    // 2. Create MaMlinzi profile
+    const { error: profileError } =
+      await supabase
+        .from("profiles")
+        .insert({
+          id: userId,
+          full_name: fullName,
+          role: "mother",
+          phone
+        });
 
     if (profileError) {
-      // Clean up Auth account if profile creation fails
+      // Clean up Auth user if profile creation fails
       await supabase.auth.admin.deleteUser(userId);
 
-      return res.status(500).json({
-        success: false,
-        message: profileError.message,
+      return res.status(400).json({
+        error: profileError.message
       });
     }
 
-    // Create mother-specific profile
-    const { data: motherProfile, error: motherError } = await supabase
-      .from("mother_profiles")
-      .insert({
-        user_id: userId,
-      })
-      .select()
-      .single();
+    // 3. Create mother profile
+    const { error: motherProfileError } =
+      await supabase
+        .from("mother_profiles")
+        .insert({
+          user_id: userId
+        });
 
-    if (motherError) {
-      // Clean up records if mother profile creation fails
-      await supabase.from("profiles").delete().eq("id", userId);
+    if (motherProfileError) {
+      // Clean up profile and Auth user
+      await supabase
+        .from("profiles")
+        .delete()
+        .eq("id", userId);
+
       await supabase.auth.admin.deleteUser(userId);
 
-      return res.status(500).json({
-        success: false,
-        message: motherError.message,
+      return res.status(400).json({
+        error: motherProfileError.message
       });
     }
 
     return res.status(201).json({
-      success: true,
       message: "Mother registered successfully.",
-      user: profile,
-      motherProfile,
+      userId
     });
+
   } catch (error) {
     console.error("Registration error:", error);
 
     return res.status(500).json({
-      success: false,
-      message: "Something went wrong during registration.",
+      error: "An unexpected error occurred during registration."
     });
   }
 });
