@@ -1,437 +1,1066 @@
+/* =====================================================
+   MOTHER DASHBOARD
+   ===================================================== */
+
 .mother-dashboard {
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--mm-background);
   color: var(--mm-text);
+  padding-bottom: 30px;
 }
 
-/* =========================
-   LOADING
-========================= */
+/* =====================================================
+   LOADING / ERROR STATES
+   ===================================================== */
 
-.mother-loading {
-  min-height: 100vh;
+.mother-page-state {
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 24px;
   background: var(--mm-background);
-  color: var(--mm-text-secondary);
-  font-size: 11px;
+  text-align: center;
 }
 
-.loading-mark {
-  width: 42px;
-  height: 42px;
-  margin-bottom: 12px;
-  border-radius: 13px;
-  background: var(--mm-purple);
-  color: white;
+.mother-loader,
+.mother-state-icon {
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  margin-bottom: 18px;
+  border-radius: 16px;
+  background: var(--mm-purple-light);
+  color: var(--mm-purple);
 }
 
-/* =========================
-   TOPBAR
-========================= */
+.mother-loader {
+  animation: motherPulse 1.4s ease-in-out infinite;
+}
 
-.mother-topbar {
-  height: 76px;
-  padding: 0 42px;
+.mother-page-state h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.mother-page-state p {
+  max-width: 340px;
+  margin: 8px 0 22px;
+  color: var(--mm-text-secondary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+@keyframes motherPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.75;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.mother-header {
+  min-height: 68px;
+  padding: 12px 20px;
   background: var(--mm-white);
   border-bottom: 1px solid var(--mm-border);
-
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .mother-brand {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
+  min-width: 0;
 }
 
-.brand-mark {
-  width: 37px;
-  height: 37px;
-  border-radius: 11px;
-
+.mother-brand-mark {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
   background: var(--mm-purple);
   color: var(--mm-white);
+}
 
+.mother-brand-copy {
+  min-width: 0;
+}
+
+.mother-brand-copy h1 {
+  margin: 0;
+  color: var(--mm-purple);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mother-brand-copy span {
+  display: block;
+  margin-top: 2px;
+  color: var(--mm-text-secondary);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.mother-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mother-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.mother-avatar {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.mother-brand strong {
-  display: block;
-  color: var(--mm-purple);
-  font-size: 15px;
-}
-
-.mother-brand span {
-  display: block;
-  margin-top: 1px;
-  color: var(--mm-text-secondary);
-  font-size: 8px;
-}
-
-.mother-user-area {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
-.mother-user-avatar {
-  width: 34px;
-  height: 34px;
   border-radius: 50%;
-
   background: var(--mm-purple-light);
   color: var(--mm-purple);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
 }
 
-.logout-button {
-  border: none;
+.mother-user-copy strong,
+.mother-user-copy span {
+  display: block;
+}
+
+.mother-user-copy strong {
+  max-width: 130px;
+  overflow: hidden;
+  color: var(--mm-text);
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mother-user-copy span {
+  margin-top: 2px;
+  color: var(--mm-text-secondary);
+  font-size: 10px;
+}
+
+.mother-signout {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 0;
   background: transparent;
   color: var(--mm-text-secondary);
-
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
 }
 
-.logout-button:hover {
+.mother-signout:hover {
   color: var(--mm-purple);
 }
 
-/* =========================
+/* =====================================================
    MAIN
-========================= */
+   ===================================================== */
 
 .mother-main {
-  width: min(1050px, calc(100% - 48px));
+  width: min(920px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 42px 0 55px;
+  padding: 30px 0 50px;
 }
 
-/* =========================
+/* =====================================================
    WELCOME
-========================= */
+   ===================================================== */
 
-.welcome-section {
-  margin-bottom: 27px;
+.mother-welcome {
+  margin-bottom: 24px;
 }
 
-.welcome-label,
-.card-eyebrow,
-.section-label {
-  margin: 0 0 5px;
+.mother-eyebrow {
+  margin: 0 0 6px;
   color: var(--mm-purple);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.welcome-section h1 {
-  margin: 0;
-  font-size: 27px;
-  line-height: 1.25;
-  font-weight: 700;
-}
-
-.welcome-text {
-  max-width: 590px;
-  margin: 8px 0 0;
-  color: var(--mm-text-secondary);
   font-size: 11px;
-  line-height: 1.7;
+  font-weight: 700;
+  letter-spacing: 0.07em;
 }
 
-/* =========================
-   CHECK-IN CARD
-========================= */
+.mother-welcome h2 {
+  margin: 0;
+  color: var(--mm-text);
+  font-size: 27px;
+  line-height: 1.3;
+  font-weight: 700;
+}
 
-.checkin-card {
-  min-height: 225px;
+.mother-welcome-text {
+  max-width: 620px;
+  margin: 9px 0 0;
+  color: var(--mm-text-secondary);
+  font-size: 15px;
+  line-height: 1.65;
+}
 
-  padding: 30px;
-  border-radius: var(--mm-radius-lg);
+/* =====================================================
+   PRIMARY CHECK-IN
+   ===================================================== */
 
-  background: var(--mm-purple);
-  color: var(--mm-white);
-
+.mother-checkin-card {
   display: flex;
   align-items: center;
-  gap: 27px;
-
-  box-shadow: 0 10px 30px rgba(106, 27, 154, 0.16);
+  gap: 20px;
+  padding: 24px;
+  border-radius: var(--mm-radius-lg);
+  background: var(--mm-purple);
+  color: var(--mm-white);
+  box-shadow:
+    0 12px 30px rgba(106, 27, 154, 0.16);
 }
 
-.checkin-illustration {
-  width: 82px;
-  height: 82px;
-  border-radius: 25px;
-
-  background: rgba(255, 255, 255, 0.13);
-
+.mother-checkin-icon {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 37px;
-  flex-shrink: 0;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, 0.13);
 }
 
-.checkin-content {
-  max-width: 600px;
+.mother-checkin-content {
+  flex: 1;
+  min-width: 0;
 }
 
-.checkin-content .card-eyebrow {
-  color: rgba(255, 255, 255, 0.7);
+.mother-card-label {
+  margin: 0 0 5px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
 }
 
-.checkin-content h2 {
+.mother-checkin-content h3 {
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
+  line-height: 1.35;
 }
 
-.checkin-content p {
-  margin: 8px 0 19px;
-
-  color: rgba(255, 255, 255, 0.8);
-
-  font-size: 10px;
-  line-height: 1.7;
+.mother-checkin-content > p {
+  max-width: 550px;
+  margin: 7px 0 16px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-.checkin-button {
-  border: none;
-  border-radius: 10px;
+/* =====================================================
+   BUTTONS
+   ===================================================== */
 
-  padding: 11px 15px;
-
-  background: var(--mm-white);
-  color: var(--mm-purple);
-
-  font-size: 10px;
-  font-weight: 600;
-
-  cursor: pointer;
-
+.mother-primary-button,
+.mother-outline-button,
+.mother-text-button {
   display: inline-flex;
   align-items: center;
-  gap: 13px;
-
-  transition: 0.2s ease;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 }
 
-.checkin-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
-}
-
-.checkin-button span {
+.mother-primary-button {
+  min-height: 48px;
+  padding: 0 17px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--mm-white);
+  color: var(--mm-purple);
   font-size: 14px;
+  font-weight: 600;
 }
 
-/* =========================
-   JOURNEY
-========================= */
+.mother-primary-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
 
-.journey-section {
+.mother-primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mother-outline-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 20px;
+  padding: 0 16px;
+  border: 1px solid var(--mm-border);
+  border-radius: 10px;
+  background: var(--mm-white);
+  color: var(--mm-purple);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mother-outline-button:hover {
+  background: var(--mm-purple-light);
+}
+
+.mother-text-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--mm-purple);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mother-text-button:hover {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   SECTIONS
+   ===================================================== */
+
+.mother-section {
   margin-top: 34px;
 }
 
-.section-header h2 {
+.mother-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 13px;
+}
+
+.mother-section-heading h3 {
   margin: 0;
-  font-size: 17px;
+  font-size: 19px;
+  line-height: 1.35;
 }
 
-.journey-grid {
-  margin-top: 16px;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+.mother-date {
+  color: var(--mm-text-secondary);
+  font-size: 12px;
+  white-space: nowrap;
 }
 
-.journey-card {
-  min-height: 90px;
+/* =====================================================
+   UPDATE CARD
+   ===================================================== */
 
-  padding: 17px;
-
-  background: var(--mm-white);
+.mother-update-card {
+  padding: 20px;
   border: 1px solid var(--mm-border);
   border-radius: var(--mm-radius-md);
-
-  display: flex;
-  align-items: center;
-  gap: 13px;
-
+  background: var(--mm-white);
   box-shadow: var(--mm-shadow);
 }
 
-.journey-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
+.mother-update-empty {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
+.mother-update-icon,
+.mother-status-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 15px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.journey-icon.purple {
+  border-radius: 13px;
   background: var(--mm-purple-light);
   color: var(--mm-purple);
 }
 
-.journey-icon.teal {
+.mother-update-content {
+  flex: 1;
+}
+
+.mother-update-content h4,
+.mother-update-header h4 {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.mother-update-content p,
+.mother-update-header p {
+  margin: 5px 0 11px;
+  color: var(--mm-text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mother-update-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+/* =====================================================
+   FOLLOW-UP
+   ===================================================== */
+
+.mother-followup {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--mm-border);
+}
+
+.mother-followup-heading span {
+  color: var(--mm-text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+}
+
+.mother-followup-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 11px;
+  padding: 14px;
+  border-radius: 12px;
+}
+
+.mother-followup-status.completed {
   background: var(--mm-teal-light);
   color: var(--mm-teal);
 }
 
-.journey-card span {
-  display: block;
-  color: var(--mm-text-secondary);
-  font-size: 9px;
+.mother-followup-status.pending {
+  background: var(--mm-purple-light);
+  color: var(--mm-purple);
 }
 
-.journey-card strong {
+.mother-followup-status-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.mother-followup-status strong {
   display: block;
-  margin-top: 4px;
+  color: var(--mm-text);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.mother-followup-status p {
+  margin: 4px 0 0;
+  color: var(--mm-text-secondary);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.mother-followup-status small {
+  display: block;
+  margin-top: 6px;
+  color: var(--mm-text-secondary);
   font-size: 11px;
 }
 
-/* =========================
-   SUPPORT
-========================= */
+/* =====================================================
+   CARE JOURNEY
+   ===================================================== */
 
-.support-card {
-  margin-top: 20px;
-
-  padding: 17px;
-
-  background: var(--mm-white);
+.mother-care-journey {
+  padding: 20px;
   border: 1px solid var(--mm-border);
   border-radius: var(--mm-radius-md);
+  background: var(--mm-white);
+  box-shadow: var(--mm-shadow);
+}
 
+.mother-journey-step {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.mother-journey-step + .mother-journey-step {
+  margin-top: 20px;
+}
+
+.mother-journey-marker {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--mm-border);
+  border-radius: 50%;
+  background: var(--mm-white);
+  color: var(--mm-text-secondary);
+  z-index: 2;
+}
+
+.mother-journey-step.completed
+  .mother-journey-marker {
+  border-color: var(--mm-teal);
+  background: var(--mm-teal-light);
+  color: var(--mm-teal);
+}
+
+.mother-journey-step.current
+  .mother-journey-marker {
+  border-color: var(--mm-purple);
+  background: var(--mm-purple-light);
+  color: var(--mm-purple);
+}
+
+.mother-journey-line {
+  position: absolute;
+  top: 34px;
+  left: 16px;
+  width: 1px;
+  height: calc(100% + 20px);
+  background: var(--mm-border);
+}
+
+.mother-journey-step:last-child
+  .mother-journey-line {
+  display: none;
+}
+
+.mother-journey-content {
+  padding-bottom: 2px;
+}
+
+.mother-journey-content span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--mm-text-secondary);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.mother-journey-step.completed
+  .mother-journey-content span {
+  color: var(--mm-teal);
+}
+
+.mother-journey-step.current
+  .mother-journey-content span {
+  color: var(--mm-purple);
+}
+
+.mother-journey-content h4 {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.mother-journey-content p {
+  max-width: 580px;
+  margin: 4px 0 0;
+  color: var(--mm-text-secondary);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* =====================================================
+   SUPPORT
+   ===================================================== */
+
+.mother-support-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-md);
+  background: var(--mm-white);
+}
+
+.mother-support-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--mm-teal-light);
+  color: var(--mm-teal);
+}
+
+.mother-support-card h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.mother-support-card p {
+  max-width: 620px;
+  margin: 5px 0 10px;
+  color: var(--mm-text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   RESPONSIBLE AI
+   ===================================================== */
+
+.mother-ai-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 700px;
+  margin: 25px auto 0;
+  padding: 0 8px;
+  color: var(--mm-text-secondary);
+}
+
+.mother-ai-note > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--mm-teal);
+}
+
+.mother-ai-note strong {
+  display: block;
+  color: var(--mm-text);
+  font-size: 12px;
+}
+
+.mother-ai-note p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   MOBILE NAVIGATION
+   ===================================================== */
+
+.mother-mobile-nav {
+  display: none;
+}
+
+/* =====================================================
+   TABLET / DESKTOP
+   ===================================================== */
+
+@media (min-width: 640px) {
+
+  .mother-header {
+    min-height: 76px;
+    padding: 0 32px;
+  }
+
+  .mother-main {
+    width: min(920px, calc(100% - 48px));
+    padding-top: 42px;
+  }
+
+  .mother-checkin-card {
+    padding: 28px;
+  }
+
+  .mother-checkin-icon {
+    width: 66px;
+    height: 66px;
+  }
+
+  .mother-welcome h2 {
+    font-size: 31px;
+  }
+
+  .mother-update-card {
+    padding: 24px;
+  }
+
+  .mother-care-journey {
+    padding: 24px;
+  }
+}
+
+@media (min-width: 900px) {
+
+  .mother-main {
+    width: min(960px, calc(100% - 72px));
+  }
+
+  .mother-checkin-card {
+    gap: 24px;
+    padding: 30px;
+  }
+
+  .mother-checkin-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 25px;
+    align-items: end;
+  }
+
+  .mother-checkin-content .mother-card-label,
+  .mother-checkin-content h3,
+  .mother-checkin-content > p {
+    grid-column: 1;
+  }
+
+  .mother-checkin-content .mother-primary-button {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+}
+
+/* =====================================================
+   SMALL MOBILE
+   ===================================================== */
+
+@media (max-width: 520px) {
+
+  .mother-dashboard {
+    padding-bottom: 82px;
+  }
+
+  .mother-header {
+    min-height: 62px;
+    padding: 10px 16px;
+  }
+
+  .mother-brand-copy span,
+  .mother-user-copy {
+    display: none;
+  }
+
+  .mother-brand-copy h1 {
+    font-size: 17px;
+  }
+
+  .mother-brand-mark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mother-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mother-signout {
+    width: 36px;
+    padding: 0;
+  }
+
+  .mother-signout span {
+    display: none;
+  }
+
+  .mother-main {
+    width: calc(100% - 28px);
+    padding: 26px 0 35px;
+  }
+
+  .mother-welcome {
+    margin-bottom: 20px;
+  }
+
+  .mother-eyebrow {
+    font-size: 10px;
+  }
+
+  .mother-welcome h2 {
+    font-size: 25px;
+  }
+
+  .mother-welcome-text {
+    margin-top: 8px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .mother-checkin-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .mother-checkin-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+  }
+
+  .mother-checkin-content h3 {
+    font-size: 19px;
+  }
+
+  .mother-checkin-content > p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .mother-checkin-content .mother-primary-button {
+    width: 100%;
+    margin-top: 3px;
+  }
+
+  .mother-section {
+    margin-top: 30px;
+  }
+
+  .mother-section-heading {
+    align-items: flex-start;
+  }
+
+  .mother-section-heading h3 {
+    font-size: 18px;
+  }
+
+  .mother-date {
+    padding-top: 16px;
+    font-size: 11px;
+  }
+
+  .mother-update-card {
+    padding: 17px;
+  }
+
+  .mother-update-empty {
+    align-items: flex-start;
+  }
+
+  .mother-update-content h4,
+  .mother-update-header h4 {
+    font-size: 15px;
+  }
+
+  .mother-update-content p,
+  .mother-update-header p {
+    font-size: 14px;
+  }
+
+  .mother-followup {
+    margin-top: 17px;
+    padding-top: 16px;
+  }
+
+  .mother-followup-status {
+    padding: 13px;
+  }
+
+  .mother-care-journey {
+    padding: 18px 16px;
+  }
+
+  .mother-journey-content h4 {
+    font-size: 14px;
+  }
+
+  .mother-journey-content p {
+    font-size: 13px;
+  }
+
+  .mother-support-card {
+    margin-top: 24px;
+    padding: 16px;
+  }
+
+  .mother-support-card p {
+    font-size: 13px;
+  }
+
+  .mother-ai-note {
+    margin-top: 22px;
+    padding: 0;
+  }
+
+  .mother-ai-note p {
+    font-size: 11px;
+  }
+
+  /* Fixed mobile navigation */
+
+  .mother-mobile-nav {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    min-height: 68px;
+    padding: 7px 8px
+      max(8px, env(safe-area-inset-right))
+      max(7px, env(safe-area-inset-bottom))
+      max(8px, env(safe-area-inset-left));
+    border-top: 1px solid var(--mm-border);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 -5px 20px rgba(37, 43, 58, 0.06);
+  }
+
+  .mother-mobile-nav button {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: 0;
+    background: transparent;
+    color: var(--mm-text-secondary);
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .mother-mobile-nav button.active {
+    color: var(--mm-purple);
+    font-weight: 600;
+  }
+
+  .mother-mobile-nav button:hover {
+    color: var(--mm-purple);
+  }
+}
+
+/* =====================================================
+   VERY SMALL SCREENS
+   ===================================================== */
+
+@media (max-width: 360px) {
+
+  .mother-main {
+    width: calc(100% - 24px);
+  }
+
+  .mother-welcome h2 {
+    font-size: 23px;
+  }
+
+  .mother-checkin-card {
+    padding: 17px;
+  }
+
+  .mother-update-card {
+    padding: 15px;
+  }
+
+  .mother-care-journey {
+    padding: 16px 13px;
+  }
+}
+
+.mother-followup-completed {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mother-followup-status {
   display: flex;
   align-items: flex-start;
   gap: 12px;
 }
 
-.support-icon {
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-
+.mother-followup-status-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
   background: var(--mm-teal-light);
   color: var(--mm-teal);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  font-size: 12px;
-  font-weight: 700;
-  flex-shrink: 0;
 }
 
-.support-card h3 {
+.mother-followup-status strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--mm-text);
+  margin-bottom: 4px;
+}
+
+.mother-followup-status p {
   margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--mm-text-secondary);
+}
+
+.mother-followup-status small {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--mm-text-secondary);
+}
+
+.mother-followup-detail {
+  padding: 16px;
+  border-radius: var(--mm-radius-md);
+  background: var(--mm-background);
+  border: 1px solid var(--mm-border);
+}
+
+.mother-followup-detail span {
+  display: block;
+  margin-bottom: 7px;
   font-size: 11px;
-}
-
-.support-card p {
-  margin: 4px 0 0;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   color: var(--mm-text-secondary);
-  font-size: 9px;
-  line-height: 1.6;
 }
 
-/* =========================
-   AI NOTE
-========================= */
-
-.mother-ai-note {
-  max-width: 760px;
-  margin: 22px auto 0;
-
-  text-align: center;
-
-  color: var(--mm-text-secondary);
-  font-size: 8px;
-  line-height: 1.6;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 750px) {
-  .mother-topbar {
-    padding: 0 20px;
-  }
-
-  .mother-main {
-    width: calc(100% - 32px);
-    padding-top: 30px;
-  }
-
-  .checkin-card {
-    padding: 24px;
-  }
-
-  .journey-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 520px) {
-  .mother-brand span {
-    display: none;
-  }
-
-  .logout-button {
-    font-size: 9px;
-  }
-
-  .welcome-section h1 {
-    font-size: 23px;
-  }
-
-  .checkin-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .checkin-illustration {
-    width: 58px;
-    height: 58px;
-    border-radius: 17px;
-    font-size: 27px;
-  }
-
-  .checkin-content h2 {
-    font-size: 19px;
-  }
+.mother-followup-detail p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--mm-text);
 }

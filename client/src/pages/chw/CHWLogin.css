@@ -1,0 +1,427 @@
+.chw-login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  background: var(--mm-background);
+}
+
+/* =========================
+   BRAND PANEL
+========================= */
+
+.chw-login-brand {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--mm-purple);
+  color: white;
+}
+
+.chw-login-brand::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -170px;
+  bottom: -180px;
+  border: 70px solid rgba(255, 255, 255, 0.06);
+  border-radius: 50%;
+}
+
+.chw-login-brand-content {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 42px 52px;
+}
+
+.chw-login-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.chw-login-brand-main {
+  max-width: 520px;
+  margin: auto 0;
+}
+
+.chw-login-brand-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 26px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+}
+
+.chw-login-brand-label {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  opacity: 0.78;
+}
+
+.chw-login-brand-main h1 {
+  max-width: 500px;
+  margin: 0;
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.16;
+  letter-spacing: -0.035em;
+}
+
+.chw-login-brand-main > p:last-child {
+  max-width: 470px;
+  margin: 20px 0 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.chw-login-brand-footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+}
+
+/* =========================
+   LOGIN MAIN
+========================= */
+
+.chw-login-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: var(--mm-background);
+}
+
+.chw-login-container {
+  width: min(100%, 440px);
+}
+
+.chw-login-mobile-logo {
+  display: none;
+}
+
+.chw-login-heading {
+  margin-bottom: 31px;
+}
+
+.chw-login-eyebrow {
+  margin: 0 0 8px;
+  color: var(--mm-purple);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.chw-login-heading h2 {
+  margin: 0;
+  color: var(--mm-text);
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.chw-login-heading > p:last-child {
+  margin: 10px 0 0;
+  color: var(--mm-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.chw-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chw-login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chw-login-field label {
+  color: var(--mm-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chw-login-input-wrap {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 14px;
+  background: var(--mm-white);
+  border: 1px solid var(--mm-border);
+  border-radius: 12px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.chw-login-input-wrap > svg {
+  flex: 0 0 auto;
+  color: var(--mm-text-secondary);
+}
+
+.chw-login-input-wrap:focus-within {
+  border-color: var(--mm-purple);
+  box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.1);
+}
+
+.chw-login-input-wrap input {
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--mm-text);
+  font-size: 14px;
+}
+
+.chw-login-input-wrap input::placeholder {
+  color: #9aa3b2;
+}
+
+.chw-login-password-toggle {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--mm-text-secondary);
+  cursor: pointer;
+}
+
+.chw-login-password-toggle:hover {
+  color: var(--mm-purple);
+  background: var(--mm-purple-light);
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.chw-login-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 13px 14px;
+  color: var(--mm-high);
+  background: var(--mm-high-light);
+  border: 1px solid #f8d5d7;
+  border-radius: 11px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.chw-login-error svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.chw-login-submit {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 3px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--mm-purple);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.chw-login-submit:hover:not(:disabled) {
+  background: var(--mm-purple-dark);
+  transform: translateY(-1px);
+}
+
+.chw-login-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.chw-login-spinner {
+  animation: chw-login-spin 0.9s linear infinite;
+}
+
+/* =========================
+   SECURITY
+========================= */
+
+.chw-login-security {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 27px;
+  padding: 14px;
+  background: var(--mm-teal-light);
+  border: 1px solid #c7ebe6;
+  border-radius: 12px;
+}
+
+.chw-login-security > svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--mm-teal);
+}
+
+.chw-login-security div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chw-login-security strong {
+  color: var(--mm-text);
+  font-size: 12px;
+}
+
+.chw-login-security span {
+  color: var(--mm-text-secondary);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.chw-login-footer {
+  margin: 25px 0 0;
+  text-align: center;
+  color: var(--mm-text-secondary);
+  font-size: 11px;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes chw-login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+  .chw-login-page {
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+
+  .chw-login-brand-content {
+    padding: 35px;
+  }
+
+  .chw-login-main {
+    padding: 32px;
+  }
+
+  .chw-login-brand-main h1 {
+    font-size: 34px;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+  .chw-login-page {
+    display: block;
+  }
+
+  .chw-login-brand {
+    display: none;
+  }
+
+  .chw-login-main {
+    min-height: 100vh;
+    align-items: flex-start;
+    padding: 28px 20px 35px;
+  }
+
+  .chw-login-container {
+    width: 100%;
+  }
+
+  .chw-login-mobile-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 54px;
+    color: var(--mm-purple);
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .chw-login-mobile-logo-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    color: white;
+    background: var(--mm-purple);
+    border-radius: 11px;
+  }
+
+  .chw-login-heading {
+    margin-bottom: 28px;
+  }
+
+  .chw-login-heading h2 {
+    font-size: 29px;
+  }
+
+  .chw-login-heading > p:last-child {
+    font-size: 14px;
+  }
+
+  .chw-login-input-wrap {
+    min-height: 54px;
+  }
+
+  .chw-login-input-wrap input {
+    height: 52px;
+  }
+
+  .chw-login-submit {
+    min-height: 54px;
+  }
+}

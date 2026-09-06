@@ -1,0 +1,459 @@
+.intelligence-auth-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  background: var(--mm-background);
+}
+
+/* =========================================
+   BRAND PANEL
+========================================= */
+
+.intelligence-auth-brand {
+  min-height: 100vh;
+  background: var(--mm-purple);
+  color: var(--mm-white);
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.intelligence-auth-brand::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  right: -180px;
+  top: -140px;
+}
+
+.intelligence-auth-brand::after {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  left: -150px;
+  bottom: -110px;
+}
+
+.intelligence-brand-inner {
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 56px;
+  position: relative;
+  z-index: 1;
+}
+
+.intelligence-brand-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.intelligence-brand-name {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.intelligence-brand-content {
+  margin-top: 110px;
+}
+
+.intelligence-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  opacity: 0.78;
+  margin-bottom: 18px;
+}
+
+.intelligence-brand-content h1 {
+  margin: 0;
+  max-width: 480px;
+  font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.15;
+  letter-spacing: -1.4px;
+  font-weight: 700;
+}
+
+.intelligence-brand-content p {
+  margin: 24px 0 0;
+  max-width: 470px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.intelligence-brand-footer {
+  margin-top: 110px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* =========================================
+   MAIN
+========================================= */
+
+.intelligence-auth-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+}
+
+.intelligence-auth-card {
+  width: min(100%, 460px);
+}
+
+.intelligence-auth-heading {
+  margin-bottom: 34px;
+}
+
+.intelligence-auth-heading h2 {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
+  color: var(--mm-text);
+}
+
+.intelligence-auth-heading p {
+  margin: 10px 0 0;
+  color: var(--mm-text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* =========================================
+   MOBILE BRAND
+========================================= */
+
+.intelligence-mobile-logo,
+.intelligence-mobile-brand {
+  display: none;
+}
+
+/* =========================================
+   FORM
+========================================= */
+
+.intelligence-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.intelligence-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.intelligence-field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mm-text);
+}
+
+.intelligence-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.intelligence-input-icon {
+  position: absolute;
+  left: 15px;
+  color: var(--mm-text-secondary);
+  pointer-events: none;
+}
+
+.intelligence-input-wrapper input {
+  width: 100%;
+  height: 52px;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-sm);
+  background: var(--mm-white);
+  color: var(--mm-text);
+  padding: 0 48px;
+  font-size: 15px;
+  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.intelligence-input-wrapper input::placeholder {
+  color: #a0a7b4;
+}
+
+.intelligence-input-wrapper input:focus {
+  border-color: var(--mm-purple);
+  box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.1);
+}
+
+.intelligence-password-toggle {
+  position: absolute;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  color: var(--mm-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.intelligence-password-toggle:hover {
+  background: var(--mm-purple-light);
+  color: var(--mm-purple);
+}
+
+.intelligence-password-toggle:focus-visible {
+  outline: 2px solid var(--mm-purple);
+  outline-offset: 2px;
+}
+
+/* =========================================
+   ERROR
+========================================= */
+
+.intelligence-auth-error {
+  padding: 13px 15px;
+  border-radius: var(--mm-radius-sm);
+  background: var(--mm-high-light);
+  border: 1px solid rgba(220, 47, 52, 0.18);
+  color: #b4232a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================
+   BUTTON
+========================================= */
+
+.intelligence-login-button {
+  height: 54px;
+  width: 100%;
+  border: none;
+  border-radius: var(--mm-radius-sm);
+  background: var(--mm-purple);
+  color: var(--mm-white);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.intelligence-login-button:hover:not(:disabled) {
+  background: var(--mm-purple-dark);
+  box-shadow: 0 7px 20px rgba(106, 27, 154, 0.18);
+  transform: translateY(-1px);
+}
+
+.intelligence-login-button:focus-visible {
+  outline: 3px solid rgba(106, 27, 154, 0.2);
+  outline-offset: 3px;
+}
+
+.intelligence-login-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.intelligence-spinner {
+  animation: intelligence-spin 0.9s linear infinite;
+}
+
+@keyframes intelligence-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   TRUST NOTE
+========================================= */
+
+.intelligence-trust-note {
+  margin-top: 28px;
+  padding: 17px;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-md);
+  background: var(--mm-white);
+  display: flex;
+  gap: 12px;
+  color: var(--mm-teal);
+}
+
+.intelligence-trust-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.intelligence-trust-note strong {
+  display: block;
+  color: var(--mm-text);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.intelligence-trust-note p {
+  margin: 0;
+  color: var(--mm-text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.intelligence-auth-footer {
+  margin: 22px 0 0;
+  text-align: center;
+  color: var(--mm-text-secondary);
+  font-size: 12px;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+  .intelligence-auth-page {
+    grid-template-columns: 0.8fr 1.2fr;
+  }
+
+  .intelligence-brand-inner {
+    padding: 40px;
+  }
+
+  .intelligence-brand-content {
+    margin-top: 80px;
+  }
+
+  .intelligence-brand-content h1 {
+    font-size: 36px;
+  }
+
+  .intelligence-brand-footer {
+    margin-top: 80px;
+  }
+
+  .intelligence-auth-main {
+    padding: 36px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+  .intelligence-auth-page {
+    display: block;
+    min-height: 100vh;
+  }
+
+  .intelligence-auth-brand {
+    display: none;
+  }
+
+  .intelligence-auth-main {
+    min-height: 100vh;
+    padding: 32px 20px;
+    align-items: flex-start;
+  }
+
+  .intelligence-auth-card {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .intelligence-mobile-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: var(--mm-purple-light);
+    color: var(--mm-purple);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+  }
+
+  .intelligence-mobile-brand {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    color: var(--mm-purple);
+    font-size: 21px;
+    font-weight: 700;
+  }
+
+  .intelligence-auth-heading {
+    margin-bottom: 30px;
+  }
+
+  .intelligence-auth-heading h2 {
+    margin-top: 42px;
+    font-size: 30px;
+  }
+
+  .intelligence-auth-heading p {
+    font-size: 14px;
+  }
+
+  .intelligence-input-wrapper input {
+    height: 54px;
+    font-size: 16px;
+  }
+
+  .intelligence-login-button {
+    height: 54px;
+    font-size: 15px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 400px) {
+  .intelligence-auth-main {
+    padding: 24px 16px;
+  }
+
+  .intelligence-auth-heading h2 {
+    font-size: 28px;
+  }
+
+  .intelligence-trust-note {
+    padding: 14px;
+  }
+}

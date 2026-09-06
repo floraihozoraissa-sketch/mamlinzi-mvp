@@ -1,101 +1,70 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  ArrowLeft,
+  Check,
+  ChevronRight,
+  CircleAlert,
+  ClipboardCheck,
+  Clock3,
+  FileText,
+  HeartPulse,
+  Loader2,
+  MessageCircle,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
+
 import { supabase } from "../../services/supabase";
 import "./CaseDetails.css";
 
-function CaseDetails() {
-  const location = useLocation();
+const API_URL = "http://localhost:4000";
+
+function formatDate(dateString) {
+  if (!dateString) return "—";
+
+  return new Date(dateString).toLocaleDateString("en-RW", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function getPriorityLabel(priority) {
+  if (priority === "high") return "HIGH PRIORITY";
+  if (priority === "medium") return "NEEDS ATTENTION";
+  return "ROUTINE";
+}
+
+function getPriorityClass(priority) {
+  if (priority === "high") return "case-details-priority-high";
+  if (priority === "medium") return "case-details-priority-medium";
+  return "case-details-priority-low";
+}
+
+export default function CaseDetails() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
-  const caseItem = location.state?.caseItem;
+  const [caseItem, setCaseItem] = useState(null);
+  const [followup, setFollowup] = useState(null);
 
-  const [action, setAction] = useState("Follow-up initiated");
+  const [action, setAction] = useState("");
   const [notes, setNotes] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [user, setUser] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    loadCase();
+  }, [id]);
 
-      setUser(user);
-    };
-
-    getUser();
-  }, []);
-
-  if (!caseItem) {
-    return (
-      <div className="case-page">
-        <div className="case-not-found">
-          <div className="not-found-icon">!</div>
-
-          <h1>Case not found</h1>
-
-          <p>
-            We couldn't find the case information you were trying to open.
-          </p>
-
-          <button
-            className="primary-button"
-            onClick={() => navigate("/chw")}
-          >
-            ← Back to cases
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const mother =
-    caseItem.health_checkins?.mother_profiles?.profiles;
-
-  const motherProfile =
-    caseItem.health_checkins?.mother_profiles;
-
-  const motherId = motherProfile?.id;
-  const assessmentId = caseItem.id;
-
-  const priority = caseItem.priority?.toLowerCase();
-
-  const priorityLabel =
-    priority === "high"
-      ? "High priority"
-      : priority === "medium"
-      ? "Medium priority"
-      : "Low priority";
-
-  const priorityDescription =
-    priority === "high"
-      ? "This case requires prompt attention."
-      : priority === "medium"
-      ? "This case may require follow-up."
-      : "Continue routine follow-up.";
-
-  const getInitials = (name) => {
-    if (!name) return "M";
-
-    return name
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase();
-  };
-
-  const handleFollowup = async () => {
+  async function loadCase() {
     try {
       setLoading(true);
-      setMessage("");
-
-      if (!motherId || !assessmentId) {
-        setMessage("Required case information is missing.");
-        return;
-      }
+      setError("");
 
       const {
         data: { session },
@@ -106,8 +75,76 @@ function CaseDetails() {
         return;
       }
 
+      const response = await fetch(`${API_URL}/api/chw/cases`, {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Could not load this case."
+        );
+      }
+
+      const foundCase = data.cases?.find(
+        (item) => item.id === id
+      );
+
+      if (!foundCase) {
+        setError("This case could not be found.");
+        return;
+      }
+
+      setCaseItem(foundCase);
+    } catch (err) {
+      console.error("CASE DETAILS ERROR:", err);
+      setError(
+        err.message || "Could not load this case."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function saveFollowup() {
+    if (!caseItem) return;
+
+    if (!action.trim()) {
+      setError("Please record the action taken before completing the follow-up.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError("");
+      setSuccess(false);
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        navigate("/chw/login");
+        return;
+      }
+
+      const motherProfile =
+        caseItem.health_checkins?.mother_profiles;
+
+      const motherId = motherProfile?.id;
+      const assessmentId = caseItem.id;
+
+      if (!motherId || !assessmentId) {
+        throw new Error(
+          "The case is missing the information needed to record a follow-up."
+        );
+      }
+
       const response = await fetch(
-        "http://localhost:4000/api/followups",
+        `${API_URL}/api/followups`,
         {
           method: "POST",
           headers: {
@@ -117,9 +154,9 @@ function CaseDetails() {
           body: JSON.stringify({
             motherId,
             assessmentId,
-            action,
+            action: action.trim(),
             status: "completed",
-            notes,
+            notes: notes.trim(),
           }),
         }
       );
@@ -127,236 +164,346 @@ function CaseDetails() {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("FOLLOW-UP API ERROR:", data);
-
         throw new Error(
-          data.error || "Failed to record follow-up."
+          data.error || "Could not record the follow-up."
         );
       }
 
-      console.log("FOLLOW-UP SUCCESS:", data);
-
-      setMessage("Follow-up recorded successfully.");
-      setNotes("");
-    } catch (error) {
-      console.error("FOLLOW-UP ERROR:", error);
-
-      setMessage(
-        error.message || "Failed to record follow-up."
+      setFollowup(data.followup || null);
+      setSuccess(true);
+    } catch (err) {
+      console.error("FOLLOW-UP SAVE ERROR:", err);
+      setError(
+        err.message ||
+          "Could not record the follow-up."
       );
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
-  };
+  }
 
-  return (
-    <div className="case-page">
-      {/* Top bar */}
-      <header className="case-header">
-        <div className="case-header-left">
+  if (loading) {
+    return (
+      <div className="case-details-page">
+        <div className="case-details-loading">
+          <Loader2
+            size={28}
+            className="case-details-spinner"
+          />
+          <p>Loading case...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !caseItem) {
+    return (
+      <div className="case-details-page">
+        <header className="case-details-header">
           <button
-            className="back-button"
+            className="case-details-back"
             onClick={() => navigate("/chw")}
           >
-            ←
+            <ArrowLeft size={20} />
+            <span>Back to cases</span>
+          </button>
+        </header>
+
+        <main className="case-details-container">
+          <div className="case-details-error">
+            <CircleAlert size={30} />
+            <h2>Case unavailable</h2>
+            <p>{error}</p>
+
+            <button
+              className="case-details-primary-btn"
+              onClick={() => navigate("/chw")}
+            >
+              Back to cases
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const mother =
+    caseItem?.health_checkins?.mother_profiles?.profiles;
+
+  const motherProfile =
+    caseItem?.health_checkins?.mother_profiles;
+
+  const motherName =
+    mother?.full_name || "Mother";
+
+  const phone =
+    mother?.phone || null;
+
+  const priority =
+    caseItem?.priority || "low";
+
+  const triggeredRules =
+    Array.isArray(caseItem?.triggered_rules)
+      ? caseItem.triggered_rules
+      : [];
+
+  const recommendation =
+    caseItem?.recommendation ||
+    "Continue appropriate follow-up based on the information recorded.";
+
+  const submittedAt =
+    caseItem?.health_checkins?.submitted_at;
+
+  const alreadyCompleted =
+    success || followup?.status === "completed";
+
+  return (
+    <div className="case-details-page">
+      <header className="case-details-header">
+        <div className="case-details-header-inner">
+          <button
+            className="case-details-back"
+            onClick={() => navigate("/chw")}
+            aria-label="Back to cases"
+          >
+            <ArrowLeft size={20} />
+            <span>Back to cases</span>
           </button>
 
-          <div>
-            <p className="breadcrumb">
-              CHW workspace / Priority cases
-            </p>
-
-            <h1>Case details</h1>
+          <div className="case-details-header-title">
+            <span>Case review</span>
+            <small>MaMlinzi CHW workspace</small>
           </div>
-        </div>
-
-        <div className="case-header-status">
-          <span className="status-dot"></span>
-          CHW workspace
         </div>
       </header>
 
-      <main className="case-content">
-        {/* Mother profile */}
-        <section className="mother-card">
-          <div className="mother-avatar">
-            {getInitials(mother?.full_name)}
-          </div>
-
-          <div className="mother-info">
-            <p className="section-eyebrow">
-              Mother
-            </p>
-
-            <h2>
-              {mother?.full_name || "Unknown mother"}
-            </h2>
-
-            <p className="mother-phone">
-              {mother?.phone || "Phone not available"}
-            </p>
-          </div>
-
-          <div className={`priority-badge ${priority}`}>
-            <span className="priority-dot"></span>
-            {priorityLabel}
-          </div>
-        </section>
-
-        {/* Priority overview */}
-        <section className={`priority-banner ${priority}`}>
-          <div className="priority-banner-icon">
-            {priority === "high"
-              ? "!"
-              : priority === "medium"
-              ? "!"
-              : "✓"}
-          </div>
-
+      <main className="case-details-container">
+        {/* Intro */}
+        <section className="case-details-intro">
           <div>
-            <h3>{priorityLabel}</h3>
+            <p className="case-details-eyebrow">
+              CASE DETAILS
+            </p>
 
-            <p>{priorityDescription}</p>
+            <h1>
+              Review this case
+            </h1>
+
+            <p>
+              Understand what was reported, review the
+              guidance, and record what you did.
+            </p>
           </div>
         </section>
 
-        {/* Main grid */}
-        <div className="case-grid">
-          <div className="case-main-column">
-            {/* Why prioritized */}
-            <section className="case-card">
-              <div className="card-heading">
-                <div className="heading-icon purple">
-                  ?
-                </div>
+        {/* WHO */}
+        <section className="case-details-card case-details-who">
+          <div className="case-details-section-heading">
+            <div className="case-details-icon-wrap">
+              <UserRound size={21} />
+            </div>
 
-                <div>
-                  <h2>Why was this case prioritized?</h2>
-                  <p>
-                    Information reported during the mother's
-                    health check-in.
-                  </p>
-                </div>
-              </div>
+            <div>
+              <span>WHO</span>
+              <h2>Mother</h2>
+            </div>
+          </div>
 
-              <div className="reason-list">
-                {caseItem.triggered_rules?.length > 0 ? (
-                  caseItem.triggered_rules.map(
-                    (rule, index) => (
-                      <div
-                        className="reason-item"
-                        key={index}
-                      >
-                        <div className="reason-number">
-                          {index + 1}
-                        </div>
+          <div className="case-details-person">
+            <div className="case-details-avatar">
+              {motherName
+                .charAt(0)
+                .toUpperCase()}
+            </div>
 
-                        <div>
-                          <strong>
-                            Reported concern
-                          </strong>
+            <div className="case-details-person-info">
+              <h3>{motherName}</h3>
 
-                          <p>{rule.reason}</p>
-                        </div>
-                      </div>
-                    )
-                  )
-                ) : (
-                  <div className="empty-reasons">
-                    <span>✓</span>
+              {phone && (
+                <p>{phone}</p>
+              )}
+
+              {submittedAt && (
+                <span>
+                  Check-in submitted{" "}
+                  {formatDate(submittedAt)}
+                </span>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* PRIORITY */}
+        <section className="case-details-card">
+          <div className="case-details-section-heading">
+            <div className="case-details-icon-wrap">
+              <HeartPulse size={21} />
+            </div>
+
+            <div>
+              <span>PRIORITY</span>
+              <h2>Case priority</h2>
+            </div>
+          </div>
+
+          <div
+            className={`case-details-priority ${getPriorityClass(
+              priority
+            )}`}
+          >
+            <div className="case-details-priority-icon">
+              {priority === "high" ? (
+                <CircleAlert size={22} />
+              ) : priority === "medium" ? (
+                <Clock3 size={22} />
+              ) : (
+                <ShieldCheck size={22} />
+              )}
+            </div>
+
+            <div>
+              <strong>
+                {getPriorityLabel(priority)}
+              </strong>
+
+              <p>
+                This priority is based on the
+                information recorded during the
+                mother's check-in.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* WHY */}
+        <section className="case-details-card">
+          <div className="case-details-section-heading">
+            <div className="case-details-icon-wrap">
+              <CircleAlert size={21} />
+            </div>
+
+            <div>
+              <span>WHY</span>
+              <h2>What was reported?</h2>
+            </div>
+          </div>
+
+          {triggeredRules.length > 0 ? (
+            <div className="case-details-reasons">
+              {triggeredRules.map(
+                (rule, index) => (
+                  <div
+                    className="case-details-reason"
+                    key={`${rule.rule || "reason"}-${index}`}
+                  >
+                    <Check size={18} />
 
                     <p>
-                      No priority rules were triggered
-                      during this check-in.
+                      {rule.reason ||
+                        "A concern was reported during the check-in."}
                     </p>
                   </div>
-                )}
-              </div>
-            </section>
+                )
+              )}
+            </div>
+          ) : (
+            <div className="case-details-no-concern">
+              <Check size={18} />
+              <p>
+                No specific priority concern was
+                triggered by the recorded check-in.
+              </p>
+            </div>
+          )}
+        </section>
 
-            {/* Recommendation */}
-            <section className="case-card recommendation-card">
-              <div className="card-heading">
-                <div className="heading-icon teal">
-                  ✓
-                </div>
+        {/* GUIDANCE */}
+        <section className="case-details-card case-details-guidance">
+          <div className="case-details-section-heading">
+            <div className="case-details-icon-wrap">
+              <ClipboardCheck size={21} />
+            </div>
 
-                <div>
-                  <h2>System recommendation</h2>
-                  <p>
-                    Suggested next step based on the
-                    recorded check-in.
-                  </p>
-                </div>
-              </div>
-
-              <div className="recommendation-box">
-                <p>
-                  {caseItem.recommendation ||
-                    "No recommendation recorded."}
-                </p>
-              </div>
-
-              <div className="ai-note">
-                <span>i</span>
-
-                <p>
-                  This recommendation is decision support.
-                  The CHW and appropriate healthcare
-                  professionals remain responsible for
-                  the final care decision.
-                </p>
-              </div>
-            </section>
+            <div>
+              <span>GUIDANCE</span>
+              <h2>What the system suggests</h2>
+            </div>
           </div>
 
-          {/* Follow-up */}
-          <aside className="case-side-column">
-            <section className="case-card followup-card">
-              <div className="card-heading">
-                <div className="heading-icon purple">
-                  →
-                </div>
+          <div className="case-details-guidance-box">
+            <p>
+              {recommendation}
+            </p>
+          </div>
 
-                <div>
-                  <h2>Record follow-up</h2>
-                  <p>
-                    Document the action taken for this case.
-                  </p>
-                </div>
+          <div className="case-details-ai-note">
+            <ShieldCheck size={18} />
+
+            <p>
+              MaMlinzi provides decision support based
+              on the information recorded. A qualified
+              healthcare professional remains responsible
+              for clinical decisions.
+            </p>
+          </div>
+        </section>
+
+        {/* FOLLOW-UP */}
+        <section className="case-details-card case-details-followup">
+          <div className="case-details-section-heading">
+            <div className="case-details-icon-wrap">
+              <FileText size={21} />
+            </div>
+
+            <div>
+              <span>FOLLOW-UP</span>
+              <h2>Record what you did</h2>
+            </div>
+          </div>
+
+          {alreadyCompleted ? (
+            <div className="case-details-complete">
+              <div className="case-details-complete-icon">
+                <Check size={28} />
               </div>
 
-              <div className="form-group">
+              <div>
+                <h3>
+                  Follow-up recorded
+                </h3>
+
+                <p>
+                  This case has been marked as
+                  completed. The mother can now see
+                  the follow-up update in her journey.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="case-details-field">
                 <label htmlFor="action">
                   Action taken
+                  <span>*</span>
                 </label>
 
-                <select
+                <textarea
                   id="action"
                   value={action}
-                  onChange={(e) =>
-                    setAction(e.target.value)
+                  onChange={(event) =>
+                    setAction(event.target.value)
                   }
-                >
-                  <option>
-                    Follow-up initiated
-                  </option>
+                  placeholder="Example: Contacted the mother and arranged a follow-up visit."
+                  rows={4}
+                />
 
-                  <option>
-                    Mother contacted
-                  </option>
-
-                  <option>
-                    Referred for professional review
-                  </option>
-
-                  <option>
-                    Follow-up completed
-                  </option>
-                </select>
+                <small>
+                  Record the action or next step agreed
+                  with the mother.
+                </small>
               </div>
 
-              <div className="form-group">
+              <div className="case-details-field">
                 <label htmlFor="notes">
                   Notes
                 </label>
@@ -364,82 +511,81 @@ function CaseDetails() {
                 <textarea
                   id="notes"
                   value={notes}
-                  onChange={(e) =>
-                    setNotes(e.target.value)
+                  onChange={(event) =>
+                    setNotes(event.target.value)
                   }
-                  placeholder="Add relevant follow-up notes..."
-                  rows="6"
+                  placeholder="Add any useful follow-up notes..."
+                  rows={4}
                 />
+
+                <small>
+                  Keep notes clear and relevant to the
+                  follow-up.
+                </small>
               </div>
 
-              {message && (
-                <div
-                  className={`followup-message ${
-                    message.includes("successfully")
-                      ? "success"
-                      : "error"
-                  }`}
-                >
-                  <span>
-                    {message.includes("successfully")
-                      ? "✓"
-                      : "!"}
-                  </span>
-
-                  {message}
+              {error && (
+                <div className="case-details-form-error">
+                  <CircleAlert size={18} />
+                  <span>{error}</span>
                 </div>
               )}
 
               <button
-                className="record-button"
-                onClick={handleFollowup}
-                disabled={!user || loading}
+                className="case-details-complete-btn"
+                onClick={saveFollowup}
+                disabled={saving}
               >
-                {loading
-                  ? "Recording..."
-                  : "Record follow-up"}
+                {saving ? (
+                  <>
+                    <Loader2
+                      size={19}
+                      className="case-details-spinner"
+                    />
+                    Saving follow-up...
+                  </>
+                ) : (
+                  <>
+                    <Check size={19} />
+                    Mark follow-up complete
+                  </>
+                )}
               </button>
-            </section>
+            </>
+          )}
+        </section>
 
-            {/* Case information */}
-            <section className="case-card info-card">
-              <h3>Case information</h3>
+        {/* Success */}
+        {alreadyCompleted && (
+          <section className="case-details-next">
+            <div className="case-details-next-icon">
+              <MessageCircle size={21} />
+            </div>
 
-              <div className="info-row">
-                <span>Priority</span>
+            <div>
+              <h3>
+                The care loop is now connected
+              </h3>
 
-                <strong className={`text-${priority}`}>
-                  {priorityLabel}
-                </strong>
-              </div>
+              <p>
+                The follow-up information is available
+                for the mother to view in her MaMlinzi
+                journey.
+              </p>
+            </div>
 
-              <div className="info-row">
-                <span>Assessment ID</span>
+            <ChevronRight size={20} />
+          </section>
+        )}
 
-                <strong>
-                  {assessmentId
-                    ? `${assessmentId.slice(0, 8)}...`
-                    : "—"}
-                </strong>
-              </div>
-
-              <div className="info-row">
-                <span>Submitted</span>
-
-                <strong>
-                  {caseItem.health_checkins?.submitted_at
-                    ? new Date(
-                        caseItem.health_checkins.submitted_at
-                      ).toLocaleDateString()
-                    : "—"}
-                </strong>
-              </div>
-            </section>
-          </aside>
-        </div>
+        <button
+          className="case-details-bottom-back"
+          onClick={() => navigate("/chw")}
+        >
+          <ArrowLeft size={18} />
+          Back to my cases
+        </button>
       </main>
     </div>
   );
 }
-
-export default CaseDetails;

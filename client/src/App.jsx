@@ -8,6 +8,8 @@ import HealthCheckin from "./pages/mother/HealthCheckin";
 import MotherDashboard from "./pages/mother/MotherDashboard";
 import IntelligenceLogin from "./pages/intelligence/IntelligenceLogin";
 import IntelligenceDashboard from "./pages/intelligence/intelligenceDashboard";
+import MotherJourney from "./pages/mother/MotherJourney";
+import MotherHelp from "./pages/mother/MotherHelp";
 
 
 function App() {
@@ -32,7 +34,7 @@ function App() {
   element={<CHWDashboard />}
 />
 <Route
-  path="/chw/case"
+  path="/chw/cases/:id"
   element={<CaseDetails />}
 />
 <Route path="/chw/login" element={<CHWLogin />} />
@@ -50,6 +52,16 @@ function App() {
 <Route
   path="/intelligence"
   element={<IntelligenceDashboard />}
+/>
+
+<Route
+  path="/mother/journey"
+  element={<MotherJourney />}
+/>
+
+<Route
+  path="/mother/help"
+  element={<MotherHelp />}
 />
       </Routes>
     </BrowserRouter>

@@ -2,10 +2,12 @@ const supabase = require("../config/supabase");
 
 async function getMotherDashboard(req, res) {
   try {
-
     console.log("AUTH USER ID:", req.user.id);
-console.log("AUTH USER EMAIL:", req.user.email);
-    // Find the maternal profile belonging to the logged-in user
+    console.log("AUTH USER EMAIL:", req.user.email);
+
+    // -----------------------------------------
+    // 1. Get mother's profile
+    // -----------------------------------------
     const { data: motherProfile, error: motherError } =
       await supabase
         .from("mother_profiles")
@@ -21,14 +23,19 @@ console.log("AUTH USER EMAIL:", req.user.email);
         .single();
 
     if (motherError || !motherProfile) {
-      console.error("MOTHER DASHBOARD PROFILE ERROR:", motherError);
+      console.error(
+        "MOTHER DASHBOARD PROFILE ERROR:",
+        motherError
+      );
 
       return res.status(404).json({
         error: "Maternal profile not found.",
       });
     }
 
-    // Get the mother's most recent check-in
+    // -----------------------------------------
+    // 2. Get latest check-in
+    // -----------------------------------------
     const { data: checkin, error: checkinError } =
       await supabase
         .from("health_checkins")
@@ -45,29 +52,90 @@ console.log("AUTH USER EMAIL:", req.user.email);
           )
         `)
         .eq("mother_id", motherProfile.id)
-        .order("submitted_at", { ascending: false })
+        .order("submitted_at", {
+          ascending: false,
+        })
         .limit(1)
         .maybeSingle();
 
     if (checkinError) {
-      console.error("MOTHER DASHBOARD CHECK-IN ERROR:", checkinError);
+      console.error(
+        "MOTHER DASHBOARD CHECK-IN ERROR:",
+        checkinError
+      );
 
       return res.status(500).json({
         error: "Could not load your latest check-in.",
       });
     }
 
+    // -----------------------------------------
+    // 3. Get latest assessment
+    // -----------------------------------------
     const assessment =
       checkin?.risk_assessments?.[0] || null;
 
+    // -----------------------------------------
+    // 4. Get follow-up for latest assessment
+    // -----------------------------------------
+    let followupQuery = supabase
+      .from("followups")
+      .select(`
+        id,
+        action,
+        status,
+        notes,
+        created_at,
+        assessment_id
+      `)
+      .eq("mother_id", motherProfile.id)
+      .order("created_at", {
+        ascending: false,
+      })
+      .limit(1)
+      .maybeSingle();
+
+    // If the mother has a latest assessment,
+    // make sure the follow-up belongs to it.
+    if (assessment?.id) {
+      followupQuery = followupQuery.eq(
+        "assessment_id",
+        assessment.id
+      );
+    }
+
+    const {
+      data: followup,
+      error: followupError,
+    } = await followupQuery;
+
+    if (followupError) {
+      console.error(
+        "MOTHER DASHBOARD FOLLOW-UP ERROR:",
+        followupError
+      );
+
+      return res.status(500).json({
+        error: "Could not load your latest follow-up.",
+      });
+    }
+
+    // -----------------------------------------
+    // 5. Return dashboard data
+    // -----------------------------------------
     return res.json({
       profile: {
         fullName:
-          motherProfile.profiles?.full_name || "Mother",
+          motherProfile.profiles?.full_name ||
+          "Mother",
+
         phone:
-          motherProfile.profiles?.phone || null,
+          motherProfile.profiles?.phone ||
+          null,
+
         pregnancyStartDate:
-          motherProfile.pregnancy_start_date || null,
+          motherProfile.pregnancy_start_date ||
+          null,
       },
 
       latestCheckin: checkin
@@ -89,8 +157,19 @@ console.log("AUTH USER EMAIL:", req.user.email);
             createdAt: assessment.created_at,
           }
         : null,
-    });
 
+      latestFollowup: followup
+        ? {
+            id: followup.id,
+            status: followup.status,
+            action: followup.action,
+            notes: followup.notes,
+            createdAt: followup.created_at,
+            assessmentId:
+              followup.assessment_id,
+          }
+        : null,
+    });
   } catch (error) {
     console.error(
       "MOTHER DASHBOARD ERROR:",

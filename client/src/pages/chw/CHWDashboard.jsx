@@ -1,78 +1,187 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  AlertCircle,
+  ArrowRight,
+  CheckCircle2,
+  Clock3,
+  HeartPulse,
+  LogOut,
+  Menu,
+  RefreshCw,
+  Search,
+  ShieldCheck,
+  Users,
+  X,
+} from "lucide-react";
 import { supabase } from "../../services/supabase";
 import "./CHWDashboard.css";
+import MamlinziLogo from "@/components/MaMlinziLogo";
 
 function CHWDashboard() {
   const navigate = useNavigate();
 
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    const loadCases = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (!session) {
-          navigate("/chw/login");
-          return;
-        }
-
-        const response = await fetch(
-          "http://localhost:4000/api/chw/cases",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${session.access_token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.error("CHW CASES API ERROR:", data);
-
-          setError(
-            data.error || "Failed to load cases."
-          );
-
-          return;
-        }
-
-        setCases(
-          Array.isArray(data)
-            ? data
-            : Array.isArray(data.cases)
-              ? data.cases
-              : []
-        );
-      } catch (error) {
-        console.error("CHW CASES ERROR:", error);
-        setError("Failed to load cases.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadCases();
-  }, [navigate]);
+    loadProfile();
+  }, []);
 
-  const statistics = useMemo(() => {
+  const loadProfile = async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) return;
+
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, role")
+        .eq("id", session.user.id)
+        .single();
+
+      if (data) {
+        setProfile(data);
+      }
+    } catch (error) {
+      console.error("CHW PROFILE ERROR:", error);
+    }
+  };
+
+  const loadCases = async (isRefresh = false) => {
+    try {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
+      setError("");
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session) {
+        navigate("/chw/login");
+        return;
+      }
+
+      const response = await fetch(
+        "http://localhost:4000/api/chw/cases",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Could not load your cases."
+        );
+      }
+
+      setCases(data.cases || []);
+    } catch (err) {
+      console.error("CHW DASHBOARD ERROR:", err);
+
+      setError(
+        err.message ||
+          "Something went wrong while loading your cases."
+      );
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    navigate("/chw/login");
+  };
+
+  const getPriority = (caseItem) => {
+    return (
+      caseItem?.priority?.toLowerCase() || "low"
+    );
+  };
+
+  const getMother = (caseItem) => {
+    return (
+      caseItem?.health_checkins
+        ?.mother_profiles
+        ?.profiles || {}
+    );
+  };
+
+  const getMotherName = (caseItem) => {
+    const mother = getMother(caseItem);
+
+    return mother.full_name || "Mother";
+  };
+
+  const getMotherPhone = (caseItem) => {
+    const mother = getMother(caseItem);
+
+    return mother.phone || "";
+  };
+
+  const getReason = (caseItem) => {
+    const rules = caseItem?.triggered_rules;
+
+    if (!Array.isArray(rules) || rules.length === 0) {
+      return "No priority concern was identified.";
+    }
+
+    return rules[0]?.reason || "Follow-up may be needed.";
+  };
+
+  const getRecommendation = (caseItem) => {
+    return (
+      caseItem?.recommendation ||
+      "Continue appropriate follow-up based on the information available."
+    );
+  };
+
+  const formatDate = (date) => {
+    if (!date) return "Date unavailable";
+
+    return new Date(date).toLocaleDateString("en-RW", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const firstName =
+    profile?.full_name?.trim()?.split(" ")[0] ||
+    "there";
+
+  const stats = useMemo(() => {
     const high = cases.filter(
-      (item) => item.priority === "high"
+      (item) => getPriority(item) === "high"
     ).length;
 
     const medium = cases.filter(
-      (item) => item.priority === "medium"
+      (item) => getPriority(item) === "medium"
     ).length;
 
     const low = cases.filter(
-      (item) => item.priority === "low"
+      (item) =>
+        getPriority(item) === "low"
     ).length;
 
     return {
@@ -83,362 +192,514 @@ function CHWDashboard() {
     };
   }, [cases]);
 
-  const getPriorityLabel = (priority) => {
-    if (priority === "high") return "High priority";
-    if (priority === "medium") return "Medium priority";
-    return "Low priority";
+  const filteredCases = useMemo(() => {
+    const normalizedSearch =
+      search.trim().toLowerCase();
+
+    return cases.filter((caseItem) => {
+      const priority = getPriority(caseItem);
+      const motherName =
+        getMotherName(caseItem).toLowerCase();
+
+      const matchesFilter =
+        filter === "all" ||
+        priority === filter;
+
+      const matchesSearch =
+        !normalizedSearch ||
+        motherName.includes(normalizedSearch);
+
+      return matchesFilter && matchesSearch;
+    });
+  }, [cases, filter, search]);
+
+  const highCases = filteredCases.filter(
+    (item) => getPriority(item) === "high"
+  );
+
+  const mediumCases = filteredCases.filter(
+    (item) => getPriority(item) === "medium"
+  );
+
+  const lowCases = filteredCases.filter(
+    (item) => getPriority(item) === "low"
+  );
+
+  const openCase = (caseItem) => {
+    navigate(`/chw/cases/${caseItem.id}`);
   };
 
-  const getMotherName = (caseItem) =>
-    caseItem.health_checkins?.mother_profiles?.profiles
-      ?.full_name || "Mother";
+  const renderCaseCard = (caseItem) => {
+    const priority = getPriority(caseItem);
+    const motherName = getMotherName(caseItem);
+    const reason = getReason(caseItem);
+    const recommendation =
+      getRecommendation(caseItem);
 
-  const getPhone = (caseItem) =>
-    caseItem.health_checkins?.mother_profiles?.profiles
-      ?.phone || "Not available";
+    return (
+      <article
+        className={`chw-case-card priority-${priority}`}
+        key={caseItem.id}
+      >
+        <div className="chw-case-top">
+          <div className="chw-mother-identity">
+            <div className="chw-mother-avatar">
+              {motherName
+                .charAt(0)
+                .toUpperCase()}
+            </div>
 
-  const getInitials = (name) =>
-    name
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase();
+            <div>
+              <h3>{motherName}</h3>
+
+              <p>
+                {getMotherPhone(caseItem) ||
+                  "Contact information unavailable"}
+              </p>
+            </div>
+          </div>
+
+          <span
+            className={`chw-priority-badge ${priority}`}
+          >
+            {priority === "high"
+              ? "High priority"
+              : priority === "medium"
+                ? "Medium"
+                : "Routine"}
+          </span>
+        </div>
+
+        <div className="chw-case-divider" />
+
+        <div className="chw-case-reason">
+          <span>WHY THIS CASE NEEDS ATTENTION</span>
+
+          <div className="chw-reason-row">
+            {priority === "high" ? (
+              <AlertCircle size={19} />
+            ) : priority === "medium" ? (
+              <Clock3 size={19} />
+            ) : (
+              <CheckCircle2 size={19} />
+            )}
+
+            <p>{reason}</p>
+          </div>
+        </div>
+
+        <div className="chw-case-action">
+          <span>RECOMMENDED ACTION</span>
+
+          <p>{recommendation}</p>
+        </div>
+
+        <button
+          className="chw-case-button"
+          onClick={() => openCase(caseItem)}
+        >
+          <span>View case</span>
+          <ArrowRight size={17} />
+        </button>
+
+        <small className="chw-case-date">
+          Updated {formatDate(caseItem.created_at)}
+        </small>
+      </article>
+    );
+  };
 
   if (loading) {
     return (
-      <div className="mm-page-state">
-        <div className="mm-loader"></div>
-        <p>Loading your cases...</p>
+      <div className="chw-page-state">
+        <div className="chw-state-icon">
+          <HeartPulse size={25} />
+        </div>
+
+        <h2>Getting your cases ready</h2>
+
+        <p>
+          Loading the mothers assigned to you...
+        </p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="chw-page-state">
+        <div className="chw-state-icon error">
+          <AlertCircle size={25} />
+        </div>
+
+        <h2>We couldn't load your cases</h2>
+
+        <p>{error}</p>
+
+        <button
+          className="chw-primary-button"
+          onClick={() => loadCases()}
+        >
+          Try again
+          <RefreshCw size={17} />
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="chw-layout">
+    <div className="chw-dashboard">
+      <header className="chw-header">
+        <div className="chw-header-left">
+          <button
+            className="chw-mobile-menu"
+            onClick={() =>
+              setMobileMenuOpen(true)
+            }
+            aria-label="Open menu"
+          >
+            <Menu size={22} />
+          </button>
 
-      {/* SIDEBAR */}
-      <aside className="chw-sidebar">
-
-        <div className="chw-brand">
-          <div className="chw-brand-icon">
-            ✚
-          </div>
-
-          <div>
-            <h2>MaMlinzi</h2>
-            <p>Community Health Worker</p>
+          <div className="chw-brand">
+            <MamlinziLogo/>
+            <div>
+              <strong>MaMlinzi</strong>
+              <span>Community care</span>
+            </div>
           </div>
         </div>
 
-        <nav className="chw-nav">
+        <div className="chw-header-right">
+          <div className="chw-user">
+            <div className="chw-user-avatar">
+              {profile?.full_name
+                ?.charAt(0)
+                ?.toUpperCase() || "C"}
+            </div>
 
-          <button className="chw-nav-item active">
-            <span>▦</span>
-            Dashboard
-          </button>
+            <div className="chw-user-copy">
+              <strong>
+                {profile?.full_name ||
+                  "Community Health Worker"}
+              </strong>
 
-          <button className="chw-nav-item">
-            <span>!</span>
-            Priority Cases
-            {statistics.high > 0 && (
-              <b>{statistics.high}</b>
-            )}
-          </button>
-
-          <button className="chw-nav-item">
-            <span>✓</span>
-            Follow-ups
-          </button>
-
-          <button className="chw-nav-item">
-            <span>♧</span>
-            Mothers
-          </button>
-
-        </nav>
-
-        <div className="chw-sidebar-footer">
-
-          <div className="chw-avatar">
-            CHW
+              <span>Community Health Worker</span>
+            </div>
           </div>
 
-          <div>
-            <strong>Community Health Worker</strong>
-            <span>MaMlinzi</span>
-          </div>
-
+          <button
+            className="chw-signout"
+            onClick={handleSignOut}
+            aria-label="Sign out"
+          >
+            <LogOut size={18} />
+            <span>Sign out</span>
+          </button>
         </div>
+      </header>
 
-      </aside>
+      {mobileMenuOpen && (
+        <div className="chw-mobile-overlay">
+          <div className="chw-mobile-menu-panel">
+            <div className="chw-mobile-menu-header">
+              <div className="chw-brand">
+                <div className="chw-brand-mark">
+                  <HeartPulse size={20} />
+                </div>
 
-      {/* MAIN */}
+                <strong>MaMlinzi</strong>
+              </div>
+
+              <button
+                onClick={() =>
+                  setMobileMenuOpen(false)
+                }
+                aria-label="Close menu"
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <nav className="chw-mobile-links">
+              <button
+                className="active"
+                onClick={() =>
+                  setMobileMenuOpen(false)
+                }
+              >
+                <Users size={19} />
+                Dashboard
+              </button>
+
+              <button
+                onClick={() =>
+                  loadCases(true)
+                }
+              >
+                <RefreshCw size={19} />
+                Refresh cases
+              </button>
+
+              <button
+                onClick={handleSignOut}
+              >
+                <LogOut size={19} />
+                Sign out
+              </button>
+            </nav>
+          </div>
+        </div>
+      )}
+
       <main className="chw-main">
-
-        <header className="chw-header">
-
+        <section className="chw-welcome">
           <div>
             <p className="chw-eyebrow">
-              CHW WORKSPACE
+              YOUR CARE WORKSPACE
             </p>
 
             <h1>
-              Good day 👋
+              Good day, {firstName}
             </h1>
 
             <p>
-              Review priority cases and follow up with mothers who may need attention.
+              Here are the mothers who may need
+              your attention today.
             </p>
           </div>
 
-          <div className="chw-header-actions">
+          <button
+            className="chw-refresh-button"
+            onClick={() => loadCases(true)}
+            disabled={refreshing}
+          >
+            <RefreshCw
+              size={17}
+              className={
+                refreshing
+                  ? "chw-spin"
+                  : ""
+              }
+            />
 
-            <button
-              className="chw-icon-button"
-              title="Notifications"
-            >
-              ♧
-            </button>
-
-          </div>
-
-        </header>
-
-        {/* SUMMARY */}
-        <section className="chw-summary">
-
-          <div className="chw-summary-card">
-
-            <div className="chw-summary-icon purple">
-              ▦
-            </div>
-
-            <div>
-              <span>Total cases</span>
-              <strong>{statistics.total}</strong>
-            </div>
-
-          </div>
-
-          <div className="chw-summary-card urgent">
-
-            <div className="chw-summary-icon red">
-              !
-            </div>
-
-            <div>
-              <span>High priority</span>
-              <strong>{statistics.high}</strong>
-            </div>
-
-          </div>
-
-          <div className="chw-summary-card">
-
-            <div className="chw-summary-icon amber">
-              !
-            </div>
-
-            <div>
-              <span>Medium priority</span>
-              <strong>{statistics.medium}</strong>
-            </div>
-
-          </div>
-
-          <div className="chw-summary-card">
-
-            <div className="chw-summary-icon teal">
-              ✓
-            </div>
-
-            <div>
-              <span>Low priority</span>
-              <strong>{statistics.low}</strong>
-            </div>
-
-          </div>
-
+            <span>
+              {refreshing
+                ? "Refreshing..."
+                : "Refresh"}
+            </span>
+          </button>
         </section>
 
-        {/* CASES */}
-        <section className="chw-cases-section">
-
-          <div className="chw-section-header">
+        <section className="chw-summary">
+          <div className="chw-summary-card total">
+            <div className="chw-summary-icon">
+              <Users size={21} />
+            </div>
 
             <div>
-              <h2>Priority cases</h2>
+              <span>ACTIVE MOTHERS</span>
+              <strong>{stats.total}</strong>
+            </div>
+          </div>
+
+          <div className="chw-summary-card high">
+            <div className="chw-summary-icon">
+              <AlertCircle size={21} />
+            </div>
+
+            <div>
+              <span>NEED ATTENTION</span>
+              <strong>{stats.high}</strong>
+            </div>
+          </div>
+
+          <div className="chw-summary-card medium">
+            <div className="chw-summary-icon">
+              <Clock3 size={21} />
+            </div>
+
+            <div>
+              <span>FOLLOW-UP</span>
+              <strong>{stats.medium}</strong>
+            </div>
+          </div>
+
+          <div className="chw-summary-card routine">
+            <div className="chw-summary-icon">
+              <CheckCircle2 size={21} />
+            </div>
+
+            <div>
+              <span>ROUTINE</span>
+              <strong>{stats.low}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section className="chw-case-workspace">
+          <div className="chw-section-header">
+            <div>
+              <p className="chw-eyebrow">
+                PRIORITY CASES
+              </p>
+
+              <h2>
+                Mothers needing your attention
+              </h2>
 
               <p>
-                Cases requiring your review and follow-up.
+                Start with the highest-priority
+                cases, then work through follow-ups.
               </p>
             </div>
 
-            <span className="chw-case-count">
-              {statistics.total} cases
-            </span>
-
+            <div className="chw-case-count">
+              {filteredCases.length}{" "}
+              {filteredCases.length === 1
+                ? "case"
+                : "cases"}
+            </div>
           </div>
 
-          {error && (
-            <div className="chw-error">
-              <strong>Unable to load cases</strong>
-              <span>{error}</span>
-            </div>
-          )}
+          <div className="chw-tools">
+            <div className="chw-search">
+              <Search size={18} />
 
-          {!error && cases.length === 0 && (
+              <input
+                type="search"
+                value={search}
+                onChange={(e) =>
+                  setSearch(e.target.value)
+                }
+                placeholder="Search mothers..."
+                aria-label="Search mothers"
+              />
+            </div>
+
+            <div className="chw-filters">
+              <button
+                className={
+                  filter === "all"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setFilter("all")
+                }
+              >
+                All
+              </button>
+
+              <button
+                className={
+                  filter === "high"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setFilter("high")
+                }
+              >
+                High
+              </button>
+
+              <button
+                className={
+                  filter === "medium"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setFilter("medium")
+                }
+              >
+                Medium
+              </button>
+
+              <button
+                className={
+                  filter === "low"
+                    ? "active"
+                    : ""
+                }
+                onClick={() =>
+                  setFilter("low")
+                }
+              >
+                Routine
+              </button>
+            </div>
+          </div>
+
+          {filteredCases.length === 0 ? (
             <div className="chw-empty">
               <div className="chw-empty-icon">
-                ✓
+                <ShieldCheck size={25} />
               </div>
 
-              <h3>No priority cases</h3>
+              <h3>No matching cases</h3>
 
               <p>
-                There are currently no cases requiring your attention.
+                Try another search or filter.
               </p>
             </div>
-          )}
+          ) : (
+            <div className="chw-case-groups">
+              {highCases.length > 0 && (
+                <section className="chw-case-group">
+                  <div className="chw-group-heading high">
+                    <span>HIGH PRIORITY</span>
+                    <strong>
+                      {highCases.length}
+                    </strong>
+                  </div>
 
-          {!error && cases.length > 0 && (
-            <div className="chw-case-list">
+                  <div className="chw-case-grid">
+                    {highCases.map(
+                      renderCaseCard
+                    )}
+                  </div>
+                </section>
+              )}
 
-              {cases.map((caseItem) => {
+              {mediumCases.length > 0 && (
+                <section className="chw-case-group">
+                  <div className="chw-group-heading medium">
+                    <span>FOLLOW-UP NEEDED</span>
+                    <strong>
+                      {mediumCases.length}
+                    </strong>
+                  </div>
 
-                const motherName =
-                  getMotherName(caseItem);
+                  <div className="chw-case-grid">
+                    {mediumCases.map(
+                      renderCaseCard
+                    )}
+                  </div>
+                </section>
+              )}
 
-                const priority =
-                  caseItem.priority || "low";
+              {lowCases.length > 0 && (
+                <section className="chw-case-group">
+                  <div className="chw-group-heading routine">
+                    <span>ROUTINE</span>
+                    <strong>
+                      {lowCases.length}
+                    </strong>
+                  </div>
 
-                return (
-                  <article
-                    className="chw-case-card"
-                    key={caseItem.id}
-                  >
-
-                    <div className="chw-case-main">
-
-                      <div className="chw-mother-avatar">
-                        {getInitials(motherName)}
-                      </div>
-
-                      <div className="chw-case-info">
-
-                        <div className="chw-case-title-row">
-
-                          <h3>
-                            {motherName}
-                          </h3>
-
-                          <span
-                            className={`chw-priority ${priority}`}
-                          >
-                            <i></i>
-                            {getPriorityLabel(priority)}
-                          </span>
-
-                        </div>
-
-                        <p className="chw-phone">
-                          {getPhone(caseItem)}
-                        </p>
-
-                        <div className="chw-reason">
-
-                          <strong>
-                            Why this case was prioritized
-                          </strong>
-
-                          {caseItem.triggered_rules?.length > 0 ? (
-                            <ul>
-                              {caseItem.triggered_rules
-                                .slice(0, 2)
-                                .map((rule, index) => (
-                                  <li key={index}>
-                                    {rule.reason ||
-                                      rule.rule}
-                                  </li>
-                                ))}
-                            </ul>
-                          ) : (
-                            <p>
-                              No specific trigger was recorded.
-                            </p>
-                          )}
-
-                        </div>
-
-                        {caseItem.recommendation && (
-                          <div className="chw-recommendation">
-
-                            <span>Suggested action</span>
-
-                            <p>
-                              {caseItem.recommendation}
-                            </p>
-
-                          </div>
-                        )}
-
-                      </div>
-
-                    </div>
-
-                    <div className="chw-case-action">
-
-                      <button
-                        className="chw-view-button"
-                        onClick={() =>
-                          navigate("/chw/case", {
-                            state: {
-                              caseItem,
-                            },
-                          })
-                        }
-                      >
-                        View case
-                        <span>→</span>
-                      </button>
-
-                    </div>
-
-                  </article>
-                );
-              })}
-
+                  <div className="chw-case-grid">
+                    {lowCases.map(
+                      renderCaseCard
+                    )}
+                  </div>
+                </section>
+              )}
             </div>
           )}
-
         </section>
-
-        {/* RESPONSIBLE AI */}
-        <div className="chw-ai-notice">
-
-          <div className="chw-ai-icon">
-            ✦
-          </div>
-
-          <div>
-            <strong>
-              MaMlinzi decision support
-            </strong>
-
-            <p>
-              Priority cases are generated from recorded
-              check-in information. Review the case details
-              and use your professional judgment when
-              deciding the next step.
-            </p>
-          </div>
-
-        </div>
-
       </main>
-
     </div>
   );
 }

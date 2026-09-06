@@ -1,605 +1,997 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Activity,
+  AlertCircle,
+  ChevronRight,
+  CircleHelp,
+  Clock3,
+  FileBarChart,
+  HeartPulse,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  RefreshCw,
+  ShieldCheck,
+  TrendingUp,
+  Users,
+  X,
+  ClipboardList,
+  CheckCircle2,
+  Network,
+  BarChart3,
+  Bell
+} from "lucide-react";
+
 import { supabase } from "../../services/supabase";
 import "./IntelligenceDashboard.css";
+import MamlinziLogo from "@/components/MaMlinziLogo";
+
+const API_URL = "http://localhost:4000";
 
 function IntelligenceDashboard() {
   const navigate = useNavigate();
 
-  const [data, setData] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [dashboard, setDashboard] = useState(null);
+
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (!session) {
-          navigate("/intelligence/login");
-          return;
-        }
-
-        // Load official profile
-        const { data: profileData, error: profileError } =
-          await supabase
-            .from("profiles")
-            .select("id, full_name, role")
-            .eq("id", session.user.id)
-            .single();
-
-        if (profileError) {
-          throw new Error("Could not load your profile.");
-        }
-
-        if (profileData.role !== "health_official") {
-          await supabase.auth.signOut();
-          navigate("/intelligence/login");
-          return;
-        }
-
-        setProfile(profileData);
-
-        // Load Intelligence Hub data
-        const response = await fetch(
-          "http://localhost:4000/api/intelligence/overview",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${session.access_token}`,
-            },
-          }
-        );
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            result.error ||
-              "Failed to load intelligence data."
-          );
-        }
-
-        setData(result);
-      } catch (error) {
-        console.error(
-          "INTELLIGENCE DASHBOARD ERROR:",
-          error
-        );
-
-        setError(
-          error.message ||
-            "Something went wrong while loading the dashboard."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadDashboard();
-  }, [navigate]);
+  }, []);
 
-  const activity = useMemo(() => {
-    if (!data) return [];
+  async function loadDashboard(isRefresh = false) {
+    try {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
 
-    const assessments = (
-      data.recentAssessments || []
-    ).map((item) => ({
-      id: `assessment-${item.id}`,
-      type: "assessment",
-      priority: item.priority,
-      title: "Risk assessment recorded",
-      description: `Priority: ${item.priority}`,
-      date: item.created_at,
-    }));
+      setError("");
 
-    const followups = (
-      data.recentFollowups || []
-    ).map((item) => ({
-      id: `followup-${item.id}`,
-      type: "followup",
-      status: item.status,
-      title:
-        item.status === "completed"
-          ? "Follow-up completed"
-          : "Follow-up pending",
-      description:
-        item.action || "Follow-up action recorded",
-      date: item.created_at,
-    }));
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-    return [...assessments, ...followups]
-      .sort(
-        (a, b) =>
-          new Date(b.date) -
-          new Date(a.date)
+      if (!session) {
+        navigate("/intelligence/login");
+        return;
+      }
+
+      const {
+        data: profileData,
+        error: profileError,
+      } = await supabase
+        .from("profiles")
+        .select("id, full_name, role")
+        .eq("id", session.user.id)
+        .single();
+
+      if (profileError) {
+        throw new Error(
+          "Could not load your MaMlinzi profile."
+        );
+      }
+
+      if (profileData.role !== "health_official") {
+        await supabase.auth.signOut();
+        navigate("/intelligence/login");
+        return;
+      }
+
+      setProfile(profileData);
+
+      const response = await fetch(
+        `${API_URL}/api/intelligence/overview`,
+        {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Could not load intelligence data."
+        );
+      }
+
+      setDashboard(data);
+    } catch (err) {
+      console.error(
+        "INTELLIGENCE DASHBOARD ERROR:",
+        err
+      );
+
+      setError(
+        err.message ||
+          "Could not load the Intelligence Hub."
+      );
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate("/intelligence/login");
+  }
+
+  /*
+   * The normalizer lets the UI tolerate small changes
+   * in the API response without requiring a redesign.
+   */
+  const normalized = useMemo(() => {
+    const source =
+      dashboard?.overview ||
+      dashboard?.summary ||
+      dashboard?.stats ||
+      dashboard ||
+      {};
+
+    const totalMothers = Number(
+      source.totalMothers ??
+        source.total_mothers ??
+        source.mothers ??
+        dashboard?.totalMothers ??
+        0
+    );
+
+    const highPriority = Number(
+      source.highPriority ??
+        source.high_priority ??
+        source.highRisk ??
+        source.high_risk ??
+        dashboard?.highPriority ??
+        0
+    );
+
+    const mediumPriority = Number(
+      source.mediumPriority ??
+        source.medium_priority ??
+        source.mediumRisk ??
+        source.medium_risk ??
+        dashboard?.mediumPriority ??
+        0
+    );
+
+    const lowPriority = Number(
+      source.lowPriority ??
+        source.low_priority ??
+        source.lowRisk ??
+        source.low_risk ??
+        dashboard?.lowPriority ??
+        0
+    );
+
+    const completedFollowups = Number(
+      source.completedFollowups ??
+        source.completed_followups ??
+        source.followupsCompleted ??
+        dashboard?.completedFollowups ??
+        0
+    );
+
+    const pendingFollowups = Number(
+      source.pendingFollowups ??
+        source.pending_followups ??
+        source.followupsPending ??
+        dashboard?.pendingFollowups ??
+        0
+    );
+
+    const assessments = Number(
+      source.totalAssessments ??
+        source.total_assessments ??
+        dashboard?.totalAssessments ??
+        0
+    );
+
+    const recentActivity =
+      dashboard?.recentActivity ||
+      dashboard?.recent_activity ||
+      source.recentActivity ||
+      [];
+
+    return {
+      totalMothers,
+      highPriority,
+      mediumPriority,
+      lowPriority,
+      completedFollowups,
+      pendingFollowups,
+      assessments,
+      recentActivity: Array.isArray(
+        recentActivity
       )
-      .slice(0, 8);
-  }, [data]);
+        ? recentActivity
+        : [],
+    };
+  }, [dashboard]);
 
-  if (loading) {
-    return (
-      <div className="mm-page-state">
-        <div className="mm-loader"></div>
-        <p>Loading Intelligence Hub...</p>
-      </div>
-    );
-  }
+  const totalRiskCases =
+    normalized.highPriority +
+    normalized.mediumPriority +
+    normalized.lowPriority;
 
-  if (error) {
-    return (
-      <div className="mm-page-state">
-        <h2>Unable to load Intelligence Hub</h2>
-        <p>{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="hub-filter"
-        >
-          Try again
-        </button>
-      </div>
-    );
-  }
+  const riskDistribution = [
+    {
+      label: "High priority",
+      value: normalized.highPriority,
+      className: "hub-risk-high",
+    },
+    {
+      label: "Needs attention",
+      value: normalized.mediumPriority,
+      className: "hub-risk-medium",
+    },
+    {
+      label: "Routine",
+      value: normalized.lowPriority,
+      className: "hub-risk-low",
+    },
+  ];
 
-  if (!data) {
-    return (
-      <div className="mm-page-state">
-        <p>No intelligence data available.</p>
-      </div>
-    );
-  }
-
-  const {
-    summary,
-    priorityDistribution,
-  } = data;
-
-  const totalRisk =
-    priorityDistribution.high +
-    priorityDistribution.medium +
-    priorityDistribution.low;
-
-  const getPercentage = (value) => {
-    if (!totalRisk) return 0;
+  function getRiskPercentage(value) {
+    if (!totalRiskCases) return 0;
 
     return Math.round(
-      (value / totalRisk) * 100
+      (value / totalRiskCases) * 100
     );
-  };
+  }
 
-  const officialName =
-    profile?.full_name || "Health Official";
+  function getActivityIcon(item) {
+    const text = JSON.stringify(item)
+      .toLowerCase();
 
-  const initials = officialName
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((name) => name[0])
-    .join("")
-    .toUpperCase();
+    if (
+      text.includes("follow") ||
+      text.includes("complete")
+    ) {
+      return <CheckCircle2 size={18} />;
+    }
 
-  const formatDate = (date) => {
+    if (
+      text.includes("high") ||
+      text.includes("alert") ||
+      text.includes("risk")
+    ) {
+      return <AlertCircle size={18} />;
+    }
+
+    return <Activity size={18} />;
+  }
+
+  function getActivityTitle(item) {
+    return (
+      item.title ||
+      item.activity ||
+      item.action ||
+      item.type ||
+      "Programme activity"
+    );
+  }
+
+  function getActivityDescription(item) {
+    return (
+      item.description ||
+      item.message ||
+      item.details ||
+      item.reason ||
+      "Recent activity recorded in MaMlinzi."
+    );
+  }
+
+  function getActivityDate(item) {
+    const date =
+      item.created_at ||
+      item.createdAt ||
+      item.timestamp ||
+      item.date;
+
     if (!date) return "";
 
-    return new Date(date).toLocaleDateString(
-      "en-GB",
+    const parsed = new Date(date);
+
+    if (Number.isNaN(parsed.getTime())) {
+      return "";
+    }
+
+    return parsed.toLocaleDateString(
+      "en-RW",
       {
         day: "numeric",
         month: "short",
         year: "numeric",
       }
     );
-  };
+  }
+
+  if (loading) {
+  return (
+    <div className="intelligence-loading-page">
+      <div className="intelligence-loading-content">
+
+        <div className="intelligence-loading-illustration">
+          <div className="intelligence-loading-mother">
+            <div className="intelligence-loading-head" />
+            <div className="intelligence-loading-body" />
+          </div>
+
+          <div className="intelligence-loading-baby">
+            <div className="intelligence-loading-baby-head" />
+            <div className="intelligence-loading-baby-body" />
+          </div>
+
+          <div className="intelligence-loading-heart">
+            ♥
+          </div>
+        </div>
+
+        <h2>Preparing your overview</h2>
+
+        <p>
+          Gathering the latest maternal care information...
+        </p>
+
+        <div className="intelligence-loading-dots">
+          <span />
+          <span />
+          <span />
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+  if (error && !dashboard) {
+    return (
+      <div className="hub-page">
+        <div className="hub-error-state">
+          <div className="hub-error-icon">
+            <AlertCircle size={30} />
+          </div>
+
+          <h1>
+            We couldn't load the Hub
+          </h1>
+
+          <p>{error}</p>
+
+          <button
+            className="hub-primary-button"
+            onClick={() => loadDashboard()}
+          >
+            <RefreshCw size={18} />
+            Try again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="hub-layout">
+    <div className="hub-page">
+      {/* =========================
+          SIDEBAR
+      ========================= */}
 
-      {/* SIDEBAR */}
-      <aside className="hub-sidebar">
+      <aside
+        className={`hub-sidebar ${
+          mobileMenuOpen
+            ? "hub-sidebar-open"
+            : ""
+        }`}
+      >
+        <div className="hub-sidebar-top">
+          <div className="hub-brand">
+            <MamlinziLogo/>
 
-        <div className="hub-brand">
-          <div className="hub-brand-icon">
-            ✚
+            <div>
+              <strong>MaMlinzi</strong>
+              <span>Intelligence Hub</span>
+            </div>
           </div>
 
-          <div>
-            <h2>Maternal Intelligence Hub</h2>
-
-            <p>
-              Community and maternal-health insights
-            </p>
-          </div>
+          <button
+            className="hub-mobile-close"
+            onClick={() =>
+              setMobileMenuOpen(false)
+            }
+            aria-label="Close navigation"
+          >
+            <X size={21} />
+          </button>
         </div>
 
-        <nav className="hub-nav">
+        <nav className="hub-navigation">
+          <p className="hub-nav-label">
+            WORKSPACE
+          </p>
 
-          <button className="hub-nav-item active">
-            <span>▦</span>
-            Overview
+          <button className="hub-nav-item hub-nav-active">
+            <LayoutDashboard size={19} />
+            <span>Overview</span>
           </button>
 
           <button className="hub-nav-item">
-            <span>♧</span>
-            Risk Registries
+            <BarChart3 size={19} />
+            <span>Insights</span>
+            <span className="hub-nav-soon">
+              Soon
+            </span>
           </button>
 
           <button className="hub-nav-item">
-            <span>✓</span>
-            Follow-up Tracks
+            <Activity size={19} />
+            <span>Activity</span>
+            <span className="hub-nav-soon">
+              Soon
+            </span>
           </button>
+
+          <p className="hub-nav-label hub-nav-label-spaced">
+            SUPPORT
+          </p>
 
           <button className="hub-nav-item">
-            <span>⌘</span>
-            Referral Networks
+            <CircleHelp size={19} />
+            <span>Help</span>
           </button>
-
-          <button className="hub-nav-item">
-            <span>⌁</span>
-            Outcomes
-          </button>
-
         </nav>
 
-        <div className="hub-user">
+        <div className="hub-sidebar-bottom">
+          <div className="hub-sidebar-profile">
+            <div className="hub-profile-avatar">
+              {(profile?.full_name ||
+                "O"
+              )
+                .charAt(0)
+                .toUpperCase()}
+            </div>
 
-          <div className="hub-avatar">
-            {initials || "HO"}
+            <div>
+              <strong>
+                {profile?.full_name ||
+                  "Health Official"}
+              </strong>
+
+              <span>
+                Health official
+              </span>
+            </div>
           </div>
 
-          <div>
-            <strong>
-              {officialName}
-            </strong>
-
-            <span>
-              Health Programme
-            </span>
-          </div>
-
+          <button
+            className="hub-logout"
+            onClick={handleLogout}
+          >
+            <LogOut size={17} />
+            Sign out
+          </button>
         </div>
-
       </aside>
 
-      {/* MAIN */}
+      {/* Mobile overlay */}
+      {mobileMenuOpen && (
+        <button
+          className="hub-sidebar-overlay"
+          onClick={() =>
+            setMobileMenuOpen(false)
+          }
+          aria-label="Close navigation"
+        />
+      )}
+
+      {/* =========================
+          MAIN
+      ========================= */}
+
       <main className="hub-main">
-
         <header className="hub-header">
+          <div className="hub-header-left">
+            <button
+              className="hub-menu-button"
+              onClick={() =>
+                setMobileMenuOpen(true)
+              }
+              aria-label="Open navigation"
+            >
+              <Menu size={21} />
+            </button>
 
-          <div>
+            <div>
+              <p className="hub-header-label">
+                MATERNAL INTELLIGENCE
+              </p>
 
-            <p className="hub-eyebrow">
-              {new Date().toLocaleDateString(
-                "en-GB",
-                {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                }
-              )}
-            </p>
-
-            <h1>
-              Maternal Intelligence Hub
-            </h1>
-
-            <p>
-              Community and maternal-health overview
-            </p>
-
+              <h1>
+                Programme overview
+              </h1>
+            </div>
           </div>
 
           <div className="hub-header-actions">
-
-            <button className="hub-filter">
-              Current data
-            </button>
-
             <button
-              className="hub-notification"
-              title="Notifications"
+              className="hub-refresh-button"
+              onClick={() =>
+                loadDashboard(true)
+              }
+              disabled={refreshing}
             >
-              ♧
+              <RefreshCw
+                size={17}
+                className={
+                  refreshing
+                    ? "hub-refresh-spin"
+                    : ""
+                }
+              />
+
+              <span>
+                {refreshing
+                  ? "Refreshing..."
+                  : "Refresh"}
+              </span>
             </button>
-
           </div>
-
         </header>
 
-        {/* KPI CARDS */}
-        <section className="hub-kpis">
+        <div className="hub-content">
+          {/* =========================
+              INTRO
+          ========================= */}
 
-          <div className="hub-kpi-card">
-
-            <span className="hub-kpi-label">
-              MOTHERS REGISTERED
-            </span>
-
-            <strong>
-              {summary.totalMothers}
-            </strong>
-
-            <span className="hub-kpi-caption">
-              Across MaMlinzi
-            </span>
-
-          </div>
-
-          <div className="hub-kpi-card">
-
-            <span className="hub-kpi-label">
-              HEALTH CHECK-INS
-            </span>
-
-            <strong>
-              {summary.totalCheckins}
-            </strong>
-
-            <span className="hub-kpi-caption">
-              Recorded check-ins
-            </span>
-
-          </div>
-
-          <div className="hub-kpi-card priority">
-
-            <span className="hub-kpi-label">
-              HIGH-PRIORITY CASES
-            </span>
-
-            <strong>
-              {summary.highPriority}
-            </strong>
-
-            <span className="hub-kpi-status">
-              ● Needs review
-            </span>
-
-          </div>
-
-          <div className="hub-kpi-card">
-
-            <span className="hub-kpi-label">
-              COMPLETED FOLLOW-UPS
-            </span>
-
-            <strong>
-              {summary.completedFollowups}
-            </strong>
-
-            <span className="hub-kpi-caption">
-              Recorded by CHWs
-            </span>
-
-          </div>
-
-        </section>
-
-        {/* MAIN GRID */}
-        <section className="hub-grid">
-
-          {/* RISK DISTRIBUTION */}
-          <div className="hub-card">
-
-            <div className="hub-card-header">
-
-              <div>
-                <h2>
-                  Maternal Risk Distribution
-                </h2>
-
-                <p>
-                  Current risk assessment distribution
-                </p>
-              </div>
-
-            </div>
-
-            <div className="risk-content">
-
-              <div
-                className="risk-donut"
-                style={{
-                  "--high": `${getPercentage(
-                    priorityDistribution.high
-                  )}%`,
-                  "--medium": `${getPercentage(
-                    priorityDistribution.medium
-                  )}%`,
-                }}
-              >
-
-                <div className="risk-donut-inner">
-
-                  <span>Total</span>
-
-                  <strong>
-                    {totalRisk}
-                  </strong>
-
-                </div>
-
-              </div>
-
-              <div className="risk-legend">
-
-                <div>
-                  <span className="dot high"></span>
-                  <span>High priority</span>
-                  <strong>
-                    {priorityDistribution.high}
-                  </strong>
-                </div>
-
-                <div>
-                  <span className="dot medium"></span>
-                  <span>Medium priority</span>
-                  <strong>
-                    {priorityDistribution.medium}
-                  </strong>
-                </div>
-
-                <div>
-                  <span className="dot low"></span>
-                  <span>Low priority</span>
-                  <strong>
-                    {priorityDistribution.low}
-                  </strong>
-                </div>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* FOLLOW-UP */}
-          <div className="hub-card">
-
-            <div className="hub-card-header">
-
-              <div>
-                <h2>
-                  Follow-up Status
-                </h2>
-
-                <p>
-                  Recorded follow-up activity
-                </p>
-              </div>
-
-            </div>
-
-            <div className="followup-list">
-
-              <div className="followup-row">
-                <div className="followup-label">
-                  Completed
-                </div>
-
-                <strong>
-                  {summary.completedFollowups}
-                </strong>
-              </div>
-
-              <div className="followup-row">
-                <div className="followup-label">
-                  Pending
-                </div>
-
-                <strong>
-                  {summary.pendingFollowups}
-                </strong>
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-
-        {/* RECENT ACTIVITY */}
-        <section className="hub-card activity-card">
-
-          <div className="hub-card-header">
-
+          <section className="hub-welcome">
             <div>
               <h2>
-                Recent Activity
+                Good{" "}
+                {new Date().getHours() < 12
+                  ? "morning"
+                  : new Date().getHours() < 18
+                  ? "afternoon"
+                  : "evening"}
+                {profile?.full_name
+                  ? `, ${profile.full_name.split(" ")[0]}`
+                  : ""}
+                .
               </h2>
 
               <p>
-                Latest assessments and follow-up actions
+                Here is the latest picture of
+                maternal care activity across
+                your programme.
               </p>
             </div>
 
-          </div>
+            <div className="hub-trust-badge">
+              <ShieldCheck size={17} />
+              <span>
+                Programme data
+              </span>
+            </div>
+          </section>
 
-          <div className="activity-list">
+          {error && dashboard && (
+            <div className="hub-inline-error">
+              <AlertCircle size={17} />
+              <span>{error}</span>
+            </div>
+          )}
 
-            {activity.length === 0 ? (
+          {/* =========================
+              SUMMARY
+          ========================= */}
 
-              <div className="empty-state">
-                No activity recorded yet.
+          <section className="hub-summary-grid">
+            <div className="hub-summary-card">
+              <div className="hub-summary-icon hub-summary-purple">
+                <Users size={21} />
               </div>
 
-            ) : (
+              <div className="hub-summary-copy">
+                <span>
+                  Mothers supported
+                </span>
 
-              activity.map((item) => (
+                <strong>
+                  {normalized.totalMothers}
+                </strong>
 
-                <div
-                  className="activity-item"
-                  key={item.id}
-                >
+                <small>
+                  Registered in the programme
+                </small>
+              </div>
+            </div>
 
-                  <div
-                    className={`activity-icon ${
-                      item.type === "followup"
-                        ? "followup"
-                        : item.priority
-                    }`}
-                  >
-                    {item.type === "followup"
-                      ? "✓"
-                      : "!"}
-                  </div>
+            <div className="hub-summary-card">
+              <div className="hub-summary-icon hub-summary-red">
+                <AlertCircle size={21} />
+              </div>
 
-                  <div className="activity-info">
+              <div className="hub-summary-copy">
+                <span>
+                  High priority
+                </span>
 
-                    <strong>
-                      {item.title}
-                    </strong>
+                <strong>
+                  {normalized.highPriority}
+                </strong>
 
-                    <span>
-                      {item.description}
-                    </span>
+                <small>
+                  Cases requiring attention
+                </small>
+              </div>
+            </div>
 
-                  </div>
+            <div className="hub-summary-card">
+              <div className="hub-summary-icon hub-summary-teal">
+                <CheckCircle2 size={21} />
+              </div>
 
-                  <time>
-                    {formatDate(item.date)}
-                  </time>
+              <div className="hub-summary-copy">
+                <span>
+                  Follow-ups completed
+                </span>
 
+                <strong>
+                  {normalized.completedFollowups}
+                </strong>
+
+                <small>
+                  Recorded by CHWs
+                </small>
+              </div>
+            </div>
+
+            <div className="hub-summary-card">
+              <div className="hub-summary-icon hub-summary-amber">
+                <Clock3 size={21} />
+              </div>
+
+              <div className="hub-summary-copy">
+                <span>
+                  Follow-ups pending
+                </span>
+
+                <strong>
+                  {normalized.pendingFollowups}
+                </strong>
+
+                <small>
+                  Still awaiting completion
+                </small>
+              </div>
+            </div>
+          </section>
+
+          {/* =========================
+              ANALYTICS ROW
+          ========================= */}
+
+          <section className="hub-analytics-grid">
+            {/* Risk distribution */}
+            <div className="hub-panel">
+              <div className="hub-panel-header">
+                <div>
+                  <span className="hub-panel-kicker">
+                    CURRENT PICTURE
+                  </span>
+
+                  <h3>
+                    Case priority distribution
+                  </h3>
                 </div>
 
-              ))
+                <div className="hub-panel-icon">
+                  <TrendingUp size={19} />
+                </div>
+              </div>
 
+              <div className="hub-risk-total">
+                <strong>
+                  {totalRiskCases}
+                </strong>
+
+                <span>
+                  assessed cases
+                </span>
+              </div>
+
+              <div className="hub-risk-list">
+                {riskDistribution.map(
+                  (item) => {
+                    const percentage =
+                      getRiskPercentage(
+                        item.value
+                      );
+
+                    return (
+                      <div
+                        className="hub-risk-row"
+                        key={item.label}
+                      >
+                        <div className="hub-risk-row-top">
+                          <div className="hub-risk-name">
+                            <span
+                              className={`hub-risk-dot ${item.className}`}
+                            />
+                            <span>
+                              {item.label}
+                            </span>
+                          </div>
+
+                          <strong>
+                            {item.value}
+                          </strong>
+                        </div>
+
+                        <div className="hub-progress">
+                          <span
+                            className={
+                              item.className
+                            }
+                            style={{
+                              width: `${percentage}%`,
+                            }}
+                          />
+                        </div>
+
+                        <span className="hub-risk-percent">
+                          {percentage}%
+                        </span>
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            </div>
+
+            {/* Follow-up */}
+            <div className="hub-panel">
+              <div className="hub-panel-header">
+                <div>
+                  <span className="hub-panel-kicker">
+                    CARE CONTINUITY
+                  </span>
+
+                  <h3>
+                    Follow-up status
+                  </h3>
+                </div>
+
+                <div className="hub-panel-icon">
+                  <FileBarChart size={19} />
+                </div>
+              </div>
+
+              <div className="hub-followup-content">
+                <div className="hub-followup-number">
+                  <strong>
+                    {normalized.completedFollowups}
+                  </strong>
+
+                  <span>
+                    completed
+                  </span>
+                </div>
+
+                <div className="hub-followup-number hub-followup-pending">
+                  <strong>
+                    {normalized.pendingFollowups}
+                  </strong>
+
+                  <span>
+                    pending
+                  </span>
+                </div>
+              </div>
+
+              <div className="hub-followup-bar">
+                <span
+                  style={{
+                    width: `${
+                      normalized.completedFollowups +
+                        normalized.pendingFollowups >
+                      0
+                        ? Math.round(
+                            (normalized.completedFollowups /
+                              (normalized.completedFollowups +
+                                normalized.pendingFollowups)) *
+                              100
+                          )
+                        : 0
+                    }%`,
+                  }}
+                />
+              </div>
+
+              <div className="hub-followup-footer">
+                <span>
+                  Completion rate
+                </span>
+
+                <strong>
+                  {normalized.completedFollowups +
+                    normalized.pendingFollowups >
+                  0
+                    ? Math.round(
+                        (normalized.completedFollowups /
+                          (normalized.completedFollowups +
+                            normalized.pendingFollowups)) *
+                          100
+                      )
+                    : 0}
+                  %
+                </strong>
+              </div>
+            </div>
+          </section>
+
+          {/* =========================
+              PROGRAMME SNAPSHOT
+          ========================= */}
+
+          <section className="hub-snapshot">
+            <div className="hub-snapshot-copy">
+              <div className="hub-snapshot-icon">
+                <HeartPulse size={22} />
+              </div>
+
+              <div>
+                <span>
+                  PROGRAMME SNAPSHOT
+                </span>
+
+                <h3>
+                  Turning recorded information
+                  into action
+                </h3>
+
+                <p>
+                  MaMlinzi helps teams see where
+                  attention may be needed and
+                  whether follow-up is being
+                  completed.
+                </p>
+              </div>
+            </div>
+
+            <div className="hub-snapshot-stat">
+              <strong>
+                {normalized.assessments ||
+                  totalRiskCases}
+              </strong>
+
+              <span>
+                assessments recorded
+              </span>
+            </div>
+          </section>
+
+          {/* =========================
+              RECENT ACTIVITY
+          ========================= */}
+
+          <section className="hub-panel hub-activity-panel">
+            <div className="hub-panel-header">
+              <div>
+                <span className="hub-panel-kicker">
+                  WHAT CHANGED
+                </span>
+
+                <h3>
+                  Recent activity
+                </h3>
+              </div>
+
+              <button className="hub-view-all">
+                View activity
+                <ChevronRight size={16} />
+              </button>
+            </div>
+
+            {normalized.recentActivity.length >
+            0 ? (
+              <div className="hub-activity-list">
+                {normalized.recentActivity
+                  .slice(0, 6)
+                  .map((item, index) => (
+                    <div
+                      className="hub-activity-item"
+                      key={
+                        item.id ||
+                        `${index}-${getActivityTitle(
+                          item
+                        )}`
+                      }
+                    >
+                      <div className="hub-activity-icon">
+                        {getActivityIcon(item)}
+                      </div>
+
+                      <div className="hub-activity-content">
+                        <strong>
+                          {getActivityTitle(
+                            item
+                          )}
+                        </strong>
+
+                        <p>
+                          {getActivityDescription(
+                            item
+                          )}
+                        </p>
+                      </div>
+
+                      <span className="hub-activity-date">
+                        {getActivityDate(item)}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <div className="hub-empty-activity">
+                <Activity size={24} />
+
+                <h4>
+                  No recent activity
+                </h4>
+
+                <p>
+                  New programme activity will
+                  appear here as cases and
+                  follow-ups are recorded.
+                </p>
+              </div>
             )}
+          </section>
 
-          </div>
+          {/* =========================
+              RESPONSIBLE AI
+          ========================= */}
 
-        </section>
+          <section className="hub-responsible-ai">
+            <div className="hub-responsible-icon">
+              <ShieldCheck size={21} />
+            </div>
 
-        {/* RESPONSIBLE AI NOTICE */}
-        <div className="hub-ai-notice">
+            <div>
+              <strong>
+                Responsible decision support
+              </strong>
 
-          <div className="hub-ai-icon">
-            ✦
-          </div>
-
-          <div>
-
-            <strong>
-              AI-assisted decision support
-            </strong>
-
-            <p>
-              MaMlinzi uses recorded information to
-              support prioritization and follow-up.
-              It does not replace clinical judgment.
-              Healthcare professionals remain responsible
-              for final decisions.
-            </p>
-
-          </div>
-
+              <p>
+                MaMlinzi uses recorded information
+                to surface patterns and support
+                programme decisions. It does not
+                replace professional judgement or
+                clinical decision-making.
+              </p>
+            </div>
+          </section>
         </div>
 
-      </main>
+        <footer className="hub-footer">
+          <span>
+            MaMlinzi Intelligence Hub
+          </span>
 
+          <span>
+            Maternal health programme intelligence
+          </span>
+        </footer>
+      </main>
     </div>
   );
 }
