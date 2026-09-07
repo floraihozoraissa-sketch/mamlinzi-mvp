@@ -34,21 +34,21 @@ function MotherRegistration() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-       `${import.meta.env.VITE_API_URL}/api/mother/dashboard`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fullName,
-            email,
-            phone,
-            password,
-          }),
-        }
-      );
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/auth/register`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fullName,
+        email,
+        phone,
+        password,
+      }),
+    }
+  );
 
       const data = await response.json();
 
