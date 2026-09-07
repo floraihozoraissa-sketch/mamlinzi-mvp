@@ -39,7 +39,7 @@ function MotherJourney() {
       }
 
       const response = await fetch(
-        "http://localhost:4000/api/mother/dashboard",
+        `${import.meta.env.VITE_API_URL}/api/mother/dashboard`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`,

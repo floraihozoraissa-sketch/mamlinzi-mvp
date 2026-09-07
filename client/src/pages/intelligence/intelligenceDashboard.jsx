@@ -27,7 +27,6 @@ import { supabase } from "../../services/supabase";
 import "./IntelligenceDashboard.css";
 import MamlinziLogo from "@/components/MaMlinziLogo";
 
-const API_URL = "http://localhost:4000";
 
 function IntelligenceDashboard() {
   const navigate = useNavigate();
@@ -87,7 +86,7 @@ function IntelligenceDashboard() {
       setProfile(profileData);
 
       const response = await fetch(
-        `${API_URL}/api/intelligence/overview`,
+        `${import.meta.env.VITE_API_URL}/api/intelligence/overview`,
         {
           headers: {
             Authorization: `Bearer ${session.access_token}`,

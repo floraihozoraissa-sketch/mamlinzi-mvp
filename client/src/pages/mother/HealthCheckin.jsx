@@ -99,7 +99,7 @@ function HealthCheckin() {
       }
 
       const response = await fetch(
-        "http://localhost:4000/api/checkins",
+        `${import.meta.env.VITE_API_URL}/api/checkins`,
         {
           method: "POST",
           headers: {

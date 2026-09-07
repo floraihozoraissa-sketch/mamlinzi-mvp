@@ -13,7 +13,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./IntelligenceAuth.css";
 
-const API_URL = "http://localhost:4000";
 
 function IntelligenceRegistration() {
   const navigate = useNavigate();
@@ -57,7 +56,7 @@ function IntelligenceRegistration() {
 
     try {
       const response = await fetch(
-        `${API_URL}/api/auth/register-role`,
+        `${import.meta.env.VITE_API_URL}/api/auth/register-role`,
         {
           method: "POST",
           headers: {

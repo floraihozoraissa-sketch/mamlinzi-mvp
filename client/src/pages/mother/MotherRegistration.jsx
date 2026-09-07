@@ -35,7 +35,7 @@ function MotherRegistration() {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/api/auth/register",
+       `${import.meta.env.VITE_API_URL}/api/mother/dashboard`,
         {
           method: "POST",
           headers: {

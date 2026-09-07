@@ -18,7 +18,6 @@ import {
 import { supabase } from "../../services/supabase";
 import "./CaseDetails.css";
 
-const API_URL = "http://localhost:4000";
 
 function formatDate(dateString) {
   if (!dateString) return "—";
@@ -75,7 +74,7 @@ export default function CaseDetails() {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/chw/cases`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chw/cases`, {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
@@ -144,7 +143,7 @@ export default function CaseDetails() {
       }
 
       const response = await fetch(
-        `${API_URL}/api/followups`,
+        `${import.meta.env.VITE_API_URL}/api/followups`,
         {
           method: "POST",
           headers: {
