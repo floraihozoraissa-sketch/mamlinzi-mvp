@@ -4,13 +4,12 @@
   align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  background:
-    linear-gradient(
-      180deg,
-      var(--mm-purple-light) 0%,
-      var(--mm-background) 42%,
-      var(--mm-background) 100%
-    );
+  background: linear-gradient(
+    180deg,
+    var(--mm-purple-light) 0%,
+    var(--mm-background) 42%,
+    var(--mm-background) 100%
+  );
 }
 
 .mother-auth-card {
@@ -38,14 +37,10 @@
 }
 
 .mother-auth-logo {
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: var(--mm-purple-light);
-  color: var(--mm-purple);
+  width: auto;
+  height: auto;
+  margin: 0;
+  gap: 0;
 }
 
 .mother-auth-intro {
@@ -131,7 +126,7 @@
 }
 
 .mother-input-wrapper input::placeholder {
-  color: #9AA3B2;
+  color: var(--mm-text-secondary);
 }
 
 .password-toggle {
@@ -198,15 +193,15 @@
 }
 
 .mother-auth-error {
-  border: 1px solid #F2C7CA;
+  border: 1px solid #f2c7ca;
   background: var(--mm-high-light);
-  color: #A92329;
+  color: #a92329;
 }
 
 .mother-auth-success {
-  border: 1px solid #BFE7E1;
+  border: 1px solid #bfe7e1;
   background: var(--mm-teal-light);
-  color: #08786D;
+  color: #08786d;
 }
 
 .mother-auth-footer {

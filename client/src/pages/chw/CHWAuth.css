@@ -1,0 +1,193 @@
+.chw-auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 18px;
+  background: var(--mm-background);
+}
+
+.chw-auth-shell {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.chw-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 16px;
+  padding: 7px 0;
+  border: 0;
+  background: transparent;
+  color: var(--mm-text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.chw-back-button:hover {
+  color: var(--mm-purple);
+}
+
+.chw-auth-card {
+  padding: 35px;
+  background: var(--mm-white);
+  border: 1px solid var(--mm-border);
+  border-radius: 20px;
+  box-shadow: var(--mm-shadow);
+}
+
+.chw-auth-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 14px;
+  color: var(--mm-teal);
+  background: var(--mm-teal-light);
+}
+
+.chw-auth-card h1 {
+  margin: 0;
+  color: var(--mm-text);
+  font-size: 1.65rem;
+}
+
+.chw-auth-subtitle {
+  margin: 9px 0 27px;
+  color: var(--mm-text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.chw-auth-card label {
+  display: block;
+  margin-bottom: 17px;
+  color: var(--mm-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.chw-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  margin-top: 7px;
+  padding: 0 14px;
+  border: 1px solid var(--mm-border);
+  border-radius: 10px;
+  background: var(--mm-white);
+  color: var(--mm-text-secondary);
+}
+
+.chw-input-wrapper:focus-within {
+  border-color: var(--mm-purple);
+  box-shadow: 0 0 0 3px var(--mm-purple-light);
+}
+
+.chw-input-wrapper input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--mm-text);
+  font-size: 0.9rem;
+}
+
+.chw-input-wrapper input::placeholder {
+  color: #9aa3b2;
+}
+
+.chw-password-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 3px;
+  border: 0;
+  background: transparent;
+  color: var(--mm-text-secondary);
+  cursor: pointer;
+}
+
+.chw-auth-submit {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--mm-purple);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chw-auth-submit:hover {
+  background: var(--mm-purple-dark);
+  color: #fff;
+}
+
+.chw-auth-submit:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.chw-auth-message {
+  margin: 8px 0 16px;
+  padding: 11px 13px;
+  border-radius: 9px;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.chw-auth-message.error {
+  background: var(--mm-high-light);
+  color: var(--mm-high);
+}
+
+.chw-auth-message.success {
+  background: var(--mm-teal-light);
+  color: #087d70;
+}
+
+.chw-auth-switch {
+  margin: 20px 0 0;
+  text-align: center;
+  color: var(--mm-text-secondary);
+  font-size: 0.8rem;
+}
+
+.chw-auth-switch button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--mm-purple);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chw-verification-note {
+  margin: 20px 0 0;
+  padding-top: 17px;
+  border-top: 1px solid var(--mm-border);
+  color: var(--mm-text-secondary);
+  font-size: 0.7rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .chw-auth-card {
+    padding: 25px 20px;
+  }
+}

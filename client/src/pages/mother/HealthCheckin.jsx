@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { supabase } from "../../services/supabase";
 import "./HealthCheckin.css";
 
@@ -121,7 +122,7 @@ function HealthCheckin() {
 
         setError(
           data.error ||
-            "Could not submit your check-in."
+          "Could not submit your check-in."
         );
 
         return;
@@ -202,8 +203,8 @@ function HealthCheckin() {
       priority === "high"
         ? "High priority"
         : priority === "medium"
-        ? "Medium priority"
-        : "Low priority";
+          ? "Medium priority"
+          : "Low priority";
 
     return (
       <div className="checkin-page">
@@ -339,7 +340,8 @@ function HealthCheckin() {
             navigate("/mother")
           }
         >
-          ← Dashboard
+          <ArrowLeft size={15} aria-hidden="true" />
+          <span>Dashboard</span>
         </button>
 
       </header>
@@ -399,11 +401,10 @@ function HealthCheckin() {
             <div className="question-list">
 
               <label
-                className={`question-option ${
-                  responses.feeling_unwell
+                className={`question-option ${responses.feeling_unwell
                     ? "selected"
                     : ""
-                }`}
+                  }`}
               >
                 <input
                   type="checkbox"
@@ -429,11 +430,10 @@ function HealthCheckin() {
               </label>
 
               <label
-                className={`question-option ${
-                  responses.severe_headache
+                className={`question-option ${responses.severe_headache
                     ? "selected"
                     : ""
-                }`}
+                  }`}
               >
                 <input
                   type="checkbox"
@@ -459,11 +459,10 @@ function HealthCheckin() {
               </label>
 
               <label
-                className={`question-option ${
-                  responses.bleeding
+                className={`question-option ${responses.bleeding
                     ? "selected"
                     : ""
-                }`}
+                  }`}
               >
                 <input
                   type="checkbox"
@@ -489,11 +488,10 @@ function HealthCheckin() {
               </label>
 
               <label
-                className={`question-option ${
-                  responses.difficulty_breathing
+                className={`question-option ${responses.difficulty_breathing
                     ? "selected"
                     : ""
-                }`}
+                  }`}
               >
                 <input
                   type="checkbox"
@@ -519,11 +517,10 @@ function HealthCheckin() {
               </label>
 
               <label
-                className={`question-option ${
-                  responses.attended_recent_anc
+                className={`question-option ${responses.attended_recent_anc
                     ? "selected"
                     : ""
-                }`}
+                  }`}
               >
                 <input
                   type="checkbox"
@@ -637,7 +634,7 @@ function HealthCheckin() {
               : "Submit health check-in"}
 
             {!submitting && (
-              <span>→</span>
+              <ArrowRight size={17} aria-hidden="true" />
             )}
           </button>
 

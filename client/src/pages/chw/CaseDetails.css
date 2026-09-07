@@ -357,7 +357,7 @@
 }
 
 .case-details-field textarea::placeholder {
-  color: #9aa3b2;
+  color: var(--mm-text-secondary);
 }
 
 .case-details-field textarea:focus {

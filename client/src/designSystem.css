@@ -1,30 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 :root {
   /* Brand */
-  --mm-purple: #6A1B9A;
-  --mm-purple-dark: #53147A;
-  --mm-purple-light: #F3E8F8;
+  --mm-purple: #5b1687;
+  --mm-purple-dark: #431064;
+  --mm-purple-light: #f1e5f7;
 
-  --mm-teal: #00A896;
-  --mm-teal-light: #E5F7F4;
+  --mm-teal: #00a896;
+  --mm-teal-light: #e5f7f4;
 
   /* Status */
-  --mm-high: #DC2F34;
-  --mm-high-light: #FFF0F1;
+  --mm-high: #dc2f34;
+  --mm-high-light: #fff0f1;
 
-  --mm-medium: #F5A623;
-  --mm-medium-light: #FFF7E8;
+  --mm-medium: #f5a623;
+  --mm-medium-light: #fff7e8;
 
-  --mm-low: #00A896;
-  --mm-low-light: #E5F7F4;
+  --mm-low: #00a896;
+  --mm-low-light: #e5f7f4;
 
   /* Neutrals */
-  --mm-background: #F7F8FA;
-  --mm-white: #FFFFFF;
-  --mm-text: #252B3A;
-  --mm-text-secondary: #718096;
-  --mm-border: #E8EAF0;
+  --mm-background: #f7f8fa;
+  --mm-white: #ffffff;
+  --mm-text: #252b3a;
+  --mm-text-secondary: #526174;
+  --mm-border: #d8dee8;
 
   /* Shape */
   --mm-radius-sm: 10px;
@@ -32,11 +32,9 @@
   --mm-radius-lg: 20px;
 
   /* Shadows */
-  --mm-shadow:
-    0 4px 20px rgba(37, 43, 58, 0.06);
+  --mm-shadow: 0 4px 20px rgba(37, 43, 58, 0.06);
 
-  --mm-shadow-hover:
-    0 8px 28px rgba(37, 43, 58, 0.10);
+  --mm-shadow-hover: 0 8px 28px rgba(37, 43, 58, 0.1);
 }
 
 * {
@@ -48,6 +46,15 @@ body {
   font-family: "Poppins", sans-serif;
   background: var(--mm-background);
   color: var(--mm-text);
+  color-scheme: light;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  margin: 0;
+  border: 0;
+  text-align: left;
 }
 
 button,
@@ -173,6 +180,12 @@ button:disabled {
   opacity: 1;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--mm-text-secondary);
+  opacity: 1;
+}
+
 /* =========================================================
    MAMLINZI BRAND
 ========================================================= */
@@ -189,6 +202,25 @@ button:disabled {
   height: 46px;
   object-fit: contain;
   display: block;
+}
+
+.mamlinzi-logo-mark {
+  width: 54px;
+  height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 6px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--mm-white);
+}
+
+.mamlinzi-logo-mark img {
+  width: 100%;
+  height: 100%;
+  object-position: center;
 }
 
 .mamlinzi-logo-text {
@@ -215,6 +247,13 @@ button:disabled {
 .mamlinzi-logo.compact img {
   width: 40px;
   height: 40px;
+}
+
+.mamlinzi-logo.compact .mamlinzi-logo-mark {
+  width: 48px;
+  height: 48px;
+  padding: 5px;
+  border-radius: 50%;
 }
 
 @media (max-width: 600px) {

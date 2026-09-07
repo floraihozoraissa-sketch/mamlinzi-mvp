@@ -4,12 +4,12 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  HeartPulse,
   LockKeyhole,
   Mail,
   Phone,
   UserRound,
 } from "lucide-react";
+import MamlinziLogo from "../../components/MaMlinziLogo";
 import "./MotherAuth.css";
 
 function MotherRegistration() {
@@ -80,9 +80,7 @@ function MotherRegistration() {
     <main className="mother-auth-page">
       <section className="mother-auth-card mother-register-card">
         <div className="mother-auth-brand">
-          <div className="mother-auth-logo">
-            <HeartPulse size={24} strokeWidth={2.2} />
-          </div>
+          <MamlinziLogo compact className="mother-auth-logo" />
 
           <span>MaMlinzi</span>
         </div>

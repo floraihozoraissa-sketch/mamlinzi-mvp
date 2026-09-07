@@ -73,8 +73,8 @@
 
 .hub-nav-label {
   margin: 10px 10px 9px;
-  color: #9aa2b1;
-  font-size: 9px;
+  color: var(--mm-text-secondary);
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
 }
@@ -121,8 +121,8 @@
   padding: 3px 7px;
   border-radius: 20px;
   background: var(--mm-background);
-  color: #9aa2b1;
-  font-size: 9px;
+  color: var(--mm-text-secondary);
+  font-size: 10px;
 }
 
 /* =================================
@@ -394,7 +394,7 @@
 
 .hub-summary-copy > span {
   color: var(--mm-text-secondary);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -407,8 +407,8 @@
 
 .hub-summary-copy small {
   margin-top: 3px;
-  color: #9aa2b1;
-  font-size: 9px;
+  color: var(--mm-text-secondary);
+  font-size: 11px;
   line-height: 1.4;
 }
 
@@ -444,7 +444,7 @@
   display: block;
   margin-bottom: 5px;
   color: var(--mm-text-secondary);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
 }
@@ -558,7 +558,7 @@
   right: 0;
   bottom: 0;
   color: var(--mm-text-secondary);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 /* =================================
@@ -589,7 +589,7 @@
   display: block;
   margin-top: 4px;
   color: var(--mm-text-secondary);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .hub-followup-pending {
@@ -620,7 +620,7 @@
   justify-content: space-between;
   margin-top: 9px;
   color: var(--mm-text-secondary);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .hub-followup-footer strong {
@@ -663,7 +663,7 @@
 
 .hub-snapshot-copy > div:last-child > span {
   color: var(--mm-purple);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.1em;
 }
@@ -677,7 +677,7 @@
   max-width: 680px;
   margin: 0;
   color: var(--mm-text-secondary);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.65;
 }
 
@@ -698,7 +698,7 @@
 
 .hub-snapshot-stat span {
   color: var(--mm-text-secondary);
-  font-size: 9px;
+  font-size: 11px;
 }
 
 /* =================================
@@ -716,7 +716,7 @@
   border: 0;
   background: transparent;
   color: var(--mm-purple);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -766,7 +766,7 @@
   overflow: hidden;
   margin: 3px 0 0;
   color: var(--mm-text-secondary);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -774,8 +774,8 @@
 
 .hub-activity-date {
   flex: 0 0 auto;
-  color: #9aa2b1;
-  font-size: 9px;
+  color: var(--mm-text-secondary);
+  font-size: 11px;
 }
 
 .hub-empty-activity {
@@ -797,7 +797,7 @@
 .hub-empty-activity p {
   max-width: 360px;
   margin: auto;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -836,7 +836,7 @@
   max-width: 900px;
   margin: 0;
   color: var(--mm-text-secondary);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -851,8 +851,8 @@
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  color: #9aa2b1;
-  font-size: 9px;
+  color: var(--mm-text-secondary);
+  font-size: 11px;
 }
 
 /* =================================
@@ -1061,7 +1061,7 @@
   }
 
   .hub-header-label {
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .hub-header h1 {
@@ -1094,11 +1094,11 @@
   }
 
   .hub-welcome p {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .hub-trust-badge {
-    font-size: 9px;
+    font-size: 11px;
   }
 
   .hub-summary-grid {

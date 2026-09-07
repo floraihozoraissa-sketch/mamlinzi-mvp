@@ -9,10 +9,10 @@ import {
   ArrowRight,
   Loader2,
   CircleAlert,
-  HeartPulse,
 } from "lucide-react";
 
 import { supabase } from "../../services/supabase";
+import MamlinziLogo from "../../components/MaMlinziLogo";
 import "./CHWLogin.css";
 
 function CHWLogin() {
@@ -96,15 +96,11 @@ function CHWLogin() {
       <section className="chw-login-brand">
         <div className="chw-login-brand-content">
           <div className="chw-login-logo">
-            <HeartPulse size={22} strokeWidth={2.4} />
+            <MamlinziLogo compact />
             <span>MaMlinzi</span>
           </div>
 
           <div className="chw-login-brand-main">
-            <div className="chw-login-brand-icon">
-              <ShieldCheck size={30} />
-            </div>
-
             <p className="chw-login-brand-label">
               COMMUNITY HEALTH WORKER
             </p>
@@ -134,7 +130,7 @@ function CHWLogin() {
         <div className="chw-login-container">
           <div className="chw-login-mobile-logo">
             <div className="chw-login-mobile-logo-icon">
-              <HeartPulse size={20} />
+              <MamlinziLogo compact />
             </div>
             <span>MaMlinzi</span>
           </div>

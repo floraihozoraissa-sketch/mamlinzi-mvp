@@ -10,6 +10,9 @@ import IntelligenceLogin from "./pages/intelligence/IntelligenceLogin";
 import IntelligenceDashboard from "./pages/intelligence/intelligenceDashboard";
 import MotherJourney from "./pages/mother/MotherJourney";
 import MotherHelp from "./pages/mother/MotherHelp";
+import RoleSelection from "./pages/RoleSelection";
+import CHWRegistration from "./pages/chw/CHWRegistration";
+import IntelligenceRegistration from "./pages/intelligence/IntelligenceRegistration";
 
 
 function App() {
@@ -18,7 +21,12 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<h1>MaMlinzi MVP</h1>}
+          element={<RoleSelection/>}
+        />
+
+        <Route
+          path="/mother/login"
+          element={<MotherLogin />}
         />
 
         <Route
@@ -63,6 +71,16 @@ function App() {
   path="/mother/help"
   element={<MotherHelp />}
 />
+
+<Route
+          path="/chw/register"
+          element={<CHWRegistration />}
+        />
+
+        <Route
+          path="/intelligence/register"
+          element={<IntelligenceRegistration />}
+        />
       </Routes>
     </BrowserRouter>
   );

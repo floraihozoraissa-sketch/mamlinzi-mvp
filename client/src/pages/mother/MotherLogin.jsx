@@ -4,11 +4,11 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  HeartPulse,
   LockKeyhole,
   Mail,
 } from "lucide-react";
 import { supabase } from "../../services/supabase";
+import MamlinziLogo from "../../components/MaMlinziLogo";
 import "./MotherAuth.css";
 
 function MotherLogin() {
@@ -67,9 +67,7 @@ function MotherLogin() {
     <main className="mother-auth-page">
       <section className="mother-auth-card">
         <div className="mother-auth-brand">
-          <div className="mother-auth-logo">
-            <HeartPulse size={24} strokeWidth={2.2} />
-          </div>
+          <MamlinziLogo compact className="mother-auth-logo" />
 
           <span>MaMlinzi</span>
         </div>

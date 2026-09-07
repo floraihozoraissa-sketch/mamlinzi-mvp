@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { supabase } from "../../services/supabase";
+import MamlinziLogo from "../../components/MaMlinziLogo";
 import "./intelligenceAuth.css";
 
 function IntelligenceLogin() {
@@ -39,7 +40,7 @@ function IntelligenceLogin() {
       if (loginError) {
         setError(
           loginError.message ||
-            "Unable to sign in. Please check your details."
+          "Unable to sign in. Please check your details."
         );
 
         setLoading(false);
@@ -91,7 +92,7 @@ function IntelligenceLogin() {
       <section className="intelligence-auth-brand">
         <div className="intelligence-brand-inner">
           <div className="intelligence-brand-logo">
-            <ShieldCheck size={26} strokeWidth={2.2} />
+            <MamlinziLogo compact />
           </div>
 
           <span className="intelligence-brand-name">
@@ -132,10 +133,7 @@ function IntelligenceLogin() {
         <div className="intelligence-auth-card">
           <div className="intelligence-auth-heading">
             <div className="intelligence-mobile-logo">
-              <ShieldCheck
-                size={24}
-                strokeWidth={2.2}
-              />
+              <MamlinziLogo compact />
             </div>
 
             <span className="intelligence-mobile-brand">

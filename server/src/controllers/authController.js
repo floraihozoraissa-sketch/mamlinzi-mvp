@@ -152,6 +152,107 @@ async function registerMother(req, res) {
   }
 }
 
+async function registerRole(req, res) {
+  const {
+    fullName,
+    email,
+    phone,
+    password,
+    role,
+  } = req.body;
+
+  const allowedRoles = [
+    "chw",
+    "health_official",
+  ];
+
+  if (
+    !fullName ||
+    !email ||
+    !phone ||
+    !password ||
+    !role
+  ) {
+    return res.status(400).json({
+      error:
+        "Full name, email, phone, password and role are required.",
+    });
+  }
+
+  if (!allowedRoles.includes(role)) {
+    return res.status(400).json({
+      error: "Invalid registration role.",
+    });
+  }
+
+  let userId = null;
+
+  try {
+    const {
+      data: authData,
+      error: authError,
+    } =
+      await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+
+    if (authError) {
+      return res.status(400).json({
+        error: authError.message,
+      });
+    }
+
+    userId = authData.user.id;
+
+    const {
+      error: profileError,
+    } = await supabase
+      .from("profiles")
+      .insert({
+        id: userId,
+        full_name: fullName,
+        role,
+        phone,
+      });
+
+    if (profileError) {
+      await supabase.auth.admin.deleteUser(userId);
+
+      return res.status(400).json({
+        error: profileError.message,
+      });
+    }
+
+    return res.status(201).json({
+      message: "Account created successfully.",
+      userId,
+      role,
+    });
+  } catch (error) {
+    console.error(
+      "ROLE REGISTRATION ERROR:",
+      error
+    );
+
+    if (userId) {
+      await supabase
+        .from("profiles")
+        .delete()
+        .eq("id", userId);
+
+      await supabase.auth.admin.deleteUser(userId);
+    }
+
+    return res.status(500).json({
+      error:
+        "An unexpected error occurred during registration.",
+    });
+  }
+}
+
 module.exports = {
   registerMother,
+  registerRole,
 };
