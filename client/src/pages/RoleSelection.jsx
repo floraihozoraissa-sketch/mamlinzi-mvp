@@ -5,7 +5,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import MamlinziLogo from "../components/MamlinziLogo";
+import MaMlinziLogo from "../components/MaMlinziLogo";
 import "./RoleSelection.css";
 
 const roles = [
@@ -47,7 +47,7 @@ function RoleSelection() {
   return (
     <main className="role-page">
       <header className="role-header">
-        <MamlinziLogo />
+        <MaMlinziLogo />
       </header>
 
       <section className="role-hero">

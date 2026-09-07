@@ -12,7 +12,7 @@ import {
 
 import { supabase } from "../../services/supabase";
 import MamlinziLogo from "../../components/MaMlinziLogo";
-import "./intelligenceAuth.css";
+import "./IntelligenceAuth.css";
 
 function IntelligenceLogin() {
   const navigate = useNavigate();
