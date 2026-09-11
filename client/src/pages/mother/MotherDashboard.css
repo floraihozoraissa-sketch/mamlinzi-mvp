@@ -41,6 +41,67 @@
   animation: motherPulse 1.4s ease-in-out infinite;
 }
 
+.mother-loader .mamlinzi-logo-mark {
+  width: 42px;
+  height: 42px;
+  padding: 4px;
+}
+
+.mother-loader .mamlinzi-logo img {
+  width: 34px;
+  height: 34px;
+}
+
+.mother-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(37, 43, 58, 0.42);
+}
+
+.mother-dialog {
+  width: min(100%, 390px);
+  padding: 28px;
+  border-radius: var(--mm-radius-lg);
+  background: var(--mm-white);
+  box-shadow: 0 18px 50px rgba(37, 43, 58, 0.2);
+}
+
+.mother-dialog h2 {
+  margin: 0;
+  color: var(--mm-text);
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+.mother-dialog p {
+  margin: 8px 0 0;
+  color: var(--mm-text-secondary);
+  line-height: 1.6;
+}
+
+.mother-dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.mother-dialog-actions .mother-outline-button,
+.mother-dialog-actions .mother-primary-button {
+  width: 100%;
+  margin-top: 0;
+}
+
+.mother-dialog-actions .mother-primary-button {
+  background: var(--mm-purple);
+  color: var(--mm-white);
+}
+
 .mother-page-state h2 {
   margin: 0;
   font-size: 20px;
@@ -185,7 +246,9 @@
 }
 
 .mother-signout:hover {
-  color: var(--mm-purple);
+  border-radius: 8px;
+  background: var(--mm-purple);
+  color: var(--mm-white);
 }
 
 /* =====================================================

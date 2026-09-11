@@ -262,6 +262,13 @@ function IntelligenceLogin() {
             </button>
           </form>
 
+          <p className="intelligence-account-switch">
+            Don't have an account?{" "}
+            <button type="button" onClick={() => navigate("/intelligence/register")}>
+              Create an account
+            </button>
+          </p>
+
           {/* RESPONSIBLE AI */}
           <div className="intelligence-trust-note">
             <ShieldCheck size={18} />

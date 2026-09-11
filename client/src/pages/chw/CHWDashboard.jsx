@@ -57,7 +57,7 @@ function CHWDashboard() {
     }
   };
 
-  const loadCases = async (isRefresh = false) => {
+  async function loadCases(isRefresh = false) {
     try {
       if (isRefresh) {
         setRefreshing(true);
@@ -100,13 +100,13 @@ function CHWDashboard() {
 
       setError(
         err.message ||
-          "Something went wrong while loading your cases."
+        "Something went wrong while loading your cases."
       );
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -131,6 +131,20 @@ function CHWDashboard() {
     const mother = getMother(caseItem);
 
     return mother.full_name || "Mother";
+  };
+
+  const normalizeSearchText = (value) =>
+    value.toLowerCase().trim().replace(/\s+/g, " ");
+
+  const nameMatchesSearch = (name, query) => {
+    if (!query) return true;
+
+    const nameTokens = normalizeSearchText(name).split(" ");
+    const queryTokens = normalizeSearchText(query).split(" ");
+
+    return queryTokens.every((queryToken) =>
+      nameTokens.some((nameToken) => nameToken.startsWith(queryToken))
+    );
   };
 
   const getMotherPhone = (caseItem) => {
@@ -193,21 +207,18 @@ function CHWDashboard() {
   }, [cases]);
 
   const filteredCases = useMemo(() => {
-    const normalizedSearch =
-      search.trim().toLowerCase();
+    const normalizedSearch = normalizeSearchText(search);
 
     return cases.filter((caseItem) => {
       const priority = getPriority(caseItem);
-      const motherName =
-        getMotherName(caseItem).toLowerCase();
+      const motherName = getMotherName(caseItem);
 
       const matchesFilter =
         filter === "all" ||
         priority === filter;
 
       const matchesSearch =
-        !normalizedSearch ||
-        motherName.includes(normalizedSearch);
+        nameMatchesSearch(motherName, normalizedSearch);
 
       return matchesFilter && matchesSearch;
     });
@@ -362,7 +373,7 @@ function CHWDashboard() {
           </button>
 
           <div className="chw-brand">
-            <MamlinziLogo/>
+            <MamlinziLogo />
             <div>
               <strong>MaMlinzi</strong>
               <span>Community care</span>

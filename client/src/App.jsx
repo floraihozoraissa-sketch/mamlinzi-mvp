@@ -13,6 +13,7 @@ import MotherHelp from "./pages/mother/MotherHelp";
 import RoleSelection from "./pages/RoleSelection";
 import CHWRegistration from "./pages/chw/CHWRegistration";
 import IntelligenceRegistration from "./pages/intelligence/IntelligenceRegistration";
+import PublicSite, { PublicInfo } from "./pages/PublicSite";
 
 
 function App() {
@@ -21,8 +22,12 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<RoleSelection/>}
+          element={<PublicSite />}
         />
+
+        <Route path="/about" element={<PublicInfo type="about" />} />
+        <Route path="/contact" element={<PublicInfo type="contact" />} />
+        <Route path="/signup" element={<RoleSelection />} />
 
         <Route
           path="/mother/login"
@@ -33,46 +38,46 @@ function App() {
           path="/mother/register"
           element={<MotherRegistration />}
         />
-        <Route 
-        path="/mother" 
-        element={<MotherDashboard/>}
+        <Route
+          path="/mother"
+          element={<MotherDashboard />}
         ></Route>
         <Route
-  path="/chw"
-  element={<CHWDashboard />}
-/>
-<Route
-  path="/chw/cases/:id"
-  element={<CaseDetails />}
-/>
-<Route path="/chw/login" element={<CHWLogin />} />
-<Route path="/mother/login" element={<MotherLogin />} />
-<Route
-  path="/mother/checkin"
-  element={<HealthCheckin />}
-/>
+          path="/chw"
+          element={<CHWDashboard />}
+        />
+        <Route
+          path="/chw/cases/:id"
+          element={<CaseDetails />}
+        />
+        <Route path="/chw/login" element={<CHWLogin />} />
+        <Route path="/mother/login" element={<MotherLogin />} />
+        <Route
+          path="/mother/checkin"
+          element={<HealthCheckin />}
+        />
 
-<Route
-  path="/intelligence/login"
-  element={<IntelligenceLogin />}
-/>
+        <Route
+          path="/intelligence/login"
+          element={<IntelligenceLogin />}
+        />
 
-<Route
-  path="/intelligence"
-  element={<IntelligenceDashboard />}
-/>
+        <Route
+          path="/intelligence"
+          element={<IntelligenceDashboard />}
+        />
 
-<Route
-  path="/mother/journey"
-  element={<MotherJourney />}
-/>
+        <Route
+          path="/mother/journey"
+          element={<MotherJourney />}
+        />
 
-<Route
-  path="/mother/help"
-  element={<MotherHelp />}
-/>
+        <Route
+          path="/mother/help"
+          element={<MotherHelp />}
+        />
 
-<Route
+        <Route
           path="/chw/register"
           element={<CHWRegistration />}
         />

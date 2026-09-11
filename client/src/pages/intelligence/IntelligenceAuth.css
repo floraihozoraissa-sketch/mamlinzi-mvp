@@ -329,6 +329,13 @@
   color: var(--mm-teal);
 }
 
+.intelligence-account-switch {
+  margin: 22px 0 0;
+  text-align: center;
+  color: var(--mm-text-secondary);
+  font-size: 13px;
+}
+
 .intelligence-trust-note svg {
   flex-shrink: 0;
   margin-top: 1px;

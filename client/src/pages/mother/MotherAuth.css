@@ -185,6 +185,16 @@
   cursor: not-allowed;
 }
 
+.mother-button-spinner {
+  animation: motherButtonSpin 0.9s linear infinite;
+}
+
+@keyframes motherButtonSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .mother-auth-message {
   padding: 13px 14px;
   border-radius: var(--mm-radius-sm);

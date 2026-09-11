@@ -122,6 +122,8 @@ function CHWRegistration() {
                   value={form.fullName}
                   onChange={handleChange}
                   placeholder="Your full name"
+                  autoComplete="name"
+                  required
                 />
               </div>
             </label>
@@ -136,6 +138,8 @@ function CHWRegistration() {
                   value={form.email}
                   onChange={handleChange}
                   placeholder="you@example.com"
+                  autoComplete="email"
+                  required
                 />
               </div>
             </label>
@@ -149,6 +153,8 @@ function CHWRegistration() {
                   value={form.phone}
                   onChange={handleChange}
                   placeholder="07..."
+                  autoComplete="tel"
+                  required
                 />
               </div>
             </label>
@@ -164,6 +170,8 @@ function CHWRegistration() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Create a password"
+                  autoComplete="new-password"
+                  required
                 />
 
                 <button

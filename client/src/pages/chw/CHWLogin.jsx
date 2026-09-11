@@ -260,6 +260,13 @@ function CHWLogin() {
             </button>
           </form>
 
+          <p className="chw-login-account-switch">
+            Don't have an account?{" "}
+            <button type="button" onClick={() => navigate("/chw/register")}>
+              Create an account
+            </button>
+          </p>
+
           <div className="chw-login-security">
             <ShieldCheck size={17} />
 

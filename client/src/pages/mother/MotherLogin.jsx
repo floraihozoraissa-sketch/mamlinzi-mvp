@@ -5,6 +5,7 @@ import {
   Eye,
   EyeOff,
   LockKeyhole,
+  Loader2,
   Mail,
 } from "lucide-react";
 import { supabase } from "../../services/supabase";
@@ -158,12 +159,13 @@ function MotherLogin() {
             type="submit"
             className="mother-primary-button"
             disabled={loading}
+            aria-busy={loading}
           >
             <span>
               {loading ? "Signing in..." : "Sign in"}
             </span>
 
-            {!loading && <ArrowRight size={18} />}
+            {loading ? <Loader2 className="mother-button-spinner" size={18} aria-hidden="true" /> : <ArrowRight size={18} />}
           </button>
         </form>
 

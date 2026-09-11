@@ -21,6 +21,7 @@ function MotherDashboard() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
 
   useEffect(() => {
     loadDashboard();
@@ -75,6 +76,8 @@ function MotherDashboard() {
     navigate("/mother/login");
   };
 
+  const requestSignOut = () => setShowSignOutDialog(true);
+
   const formatDate = (date) => {
     if (!date) return "Date unavailable";
 
@@ -94,8 +97,8 @@ function MotherDashboard() {
   if (loading) {
     return (
       <div className="mother-page-state">
-        <div className="mother-loader">
-          <HeartPulse size={24} />
+        <div className="mother-loader" aria-hidden="true">
+          <MamlinziLogo compact />
         </div>
 
         <h2>Getting things ready</h2>
@@ -138,9 +141,9 @@ function MotherDashboard() {
   const hasCheckin = Boolean(latestCheckin);
   const latestFollowup =
     dashboard?.latestFollowup || null;
-const informationReviewed = Boolean(latestAssessment);
-const followupCompleted =
-  latestFollowup?.status === "completed";
+  const informationReviewed = Boolean(latestAssessment);
+  const followupCompleted =
+    latestFollowup?.status === "completed";
 
   /*
     This is intentionally ready for the follow-up
@@ -149,7 +152,7 @@ const followupCompleted =
     Until then, the dashboard safely falls back
     to the current assessment state.
   */
-  
+
 
   return (
     <div className="mother-dashboard">
@@ -161,7 +164,7 @@ const followupCompleted =
       <header className="mother-header">
 
         <div className="mother-brand">
-          <MamlinziLogo/>
+          <MamlinziLogo />
 
           <div className="mother-brand-copy">
             <h1>MaMlinzi</h1>
@@ -191,7 +194,7 @@ const followupCompleted =
 
           <button
             className="mother-signout"
-            onClick={handleSignOut}
+            onClick={requestSignOut}
             aria-label="Sign out"
           >
             <LogOut size={18} />
@@ -358,67 +361,67 @@ const followupCompleted =
               </div>
 
               {/* Follow-up */}
-<div className="mother-followup">
-  <div className="mother-followup-heading">
-    <span>FOLLOW-UP UPDATE</span>
-  </div>
+              <div className="mother-followup">
+                <div className="mother-followup-heading">
+                  <span>FOLLOW-UP UPDATE</span>
+                </div>
 
-  {followupCompleted ? (
-    <div className="mother-followup-completed">
-      <div className="mother-followup-status">
-        <div className="mother-followup-status-icon">
-          <Check size={18} />
-        </div>
+                {followupCompleted ? (
+                  <div className="mother-followup-completed">
+                    <div className="mother-followup-status">
+                      <div className="mother-followup-status-icon">
+                        <Check size={18} />
+                      </div>
 
-        <div>
-          <strong>Follow-up completed</strong>
+                      <div>
+                        <strong>Follow-up completed</strong>
 
-          <p>
-            Your community health worker has
-            completed your follow-up.
-          </p>
+                        <p>
+                          Your community health worker has
+                          completed your follow-up.
+                        </p>
 
-          {latestFollowup?.createdAt && (
-            <small>
-              {formatDate(latestFollowup.createdAt)}
-            </small>
-          )}
-        </div>
-      </div>
+                        {latestFollowup?.createdAt && (
+                          <small>
+                            {formatDate(latestFollowup.createdAt)}
+                          </small>
+                        )}
+                      </div>
+                    </div>
 
-      {latestFollowup?.notes && (
-        <div className="mother-followup-detail">
-          <span>FOLLOW-UP UPDATE</span>
+                    {latestFollowup?.notes && (
+                      <div className="mother-followup-detail">
+                        <span>FOLLOW-UP UPDATE</span>
 
-          <p>{latestFollowup.notes}</p>
-        </div>
-      )}
+                        <p>{latestFollowup.notes}</p>
+                      </div>
+                    )}
 
-      {latestFollowup?.action && (
-        <div className="mother-followup-detail">
-          <span>RECOMMENDED NEXT STEP</span>
+                    {latestFollowup?.action && (
+                      <div className="mother-followup-detail">
+                        <span>RECOMMENDED NEXT STEP</span>
 
-          <p>{latestFollowup.action}</p>
-        </div>
-      )}
-    </div>
-  ) : (
-    <div className="mother-followup-status pending">
-      <div className="mother-followup-status-icon">
-        <MessageCircle size={18} />
-      </div>
+                        <p>{latestFollowup.action}</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="mother-followup-status pending">
+                    <div className="mother-followup-status-icon">
+                      <MessageCircle size={18} />
+                    </div>
 
-      <div>
-        <strong>Your care team may follow up</strong>
+                    <div>
+                      <strong>Your care team may follow up</strong>
 
-        <p>
-          If follow-up is needed, your community
-          health worker will contact you.
-        </p>
-      </div>
-    </div>
-  )}
-</div>
+                      <p>
+                        If follow-up is needed, your community
+                        health worker will contact you.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Journey button */}
 
@@ -487,22 +490,21 @@ const followupCompleted =
             </div>
 
             <div
-              className={`mother-journey-step ${
-  informationReviewed
-    ? "completed"
-    : hasCheckin
-      ? "current"
-      : "upcoming"
-}`}
+              className={`mother-journey-step ${informationReviewed
+                  ? "completed"
+                  : hasCheckin
+                    ? "current"
+                    : "upcoming"
+                }`}
             >
 
               <div className="mother-journey-marker">
 
                 {informationReviewed ? (
-  <Check size={17} />
-) : (
-  <ShieldCheck size={17} />
-)}
+                  <Check size={17} />
+                ) : (
+                  <ShieldCheck size={17} />
+                )}
 
               </div>
 
@@ -531,13 +533,12 @@ const followupCompleted =
             </div>
 
             <div
-              className={`mother-journey-step ${
-                followupCompleted
+              className={`mother-journey-step ${followupCompleted
                   ? "completed"
                   : hasCheckin
                     ? "current"
                     : "upcoming"
-              }`}
+                }`}
             >
 
               <div className="mother-journey-marker">
@@ -574,11 +575,10 @@ const followupCompleted =
             </div>
 
             <div
-              className={`mother-journey-step ${
-                followupCompleted
+              className={`mother-journey-step ${followupCompleted
                   ? "completed"
                   : "upcoming"
-              }`}
+                }`}
             >
 
               <div className="mother-journey-marker">
@@ -722,6 +722,20 @@ const followupCompleted =
         </button>
 
       </nav>
+
+      {showSignOutDialog && (
+        <div className="mother-dialog-backdrop" role="presentation">
+          <section className="mother-dialog" role="dialog" aria-modal="true" aria-labelledby="signout-title">
+            <div className="mother-state-icon"><LogOut size={22} /></div>
+            <h2 id="signout-title">Are you sure you want to sign out?</h2>
+            <p>You can sign back in whenever you are ready.</p>
+            <div className="mother-dialog-actions">
+              <button className="mother-outline-button" onClick={() => setShowSignOutDialog(false)}>Cancel</button>
+              <button className="mother-primary-button" onClick={handleSignOut}>Sign out</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

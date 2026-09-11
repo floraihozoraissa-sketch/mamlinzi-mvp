@@ -301,6 +301,24 @@
   border-radius: 12px;
 }
 
+.chw-login-account-switch {
+  margin: 22px 0 0;
+  text-align: center;
+  color: var(--mm-text-secondary);
+  font-size: 13px;
+}
+
+.chw-login-account-switch button,
+.intelligence-account-switch button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--mm-purple);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .chw-login-security > svg {
   flex: 0 0 auto;
   margin-top: 2px;
