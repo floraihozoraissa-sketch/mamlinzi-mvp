@@ -6,6 +6,7 @@ import {
   PhoneCall,
   ShieldCheck,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import "./MotherHelp.css";
 
@@ -84,6 +85,40 @@ function MotherHelp() {
           </div>
         </section>
 
+        <section className="mother-help-knowledge" aria-labelledby="knowledge-title">
+          <div className="mother-help-section-heading">
+            <BookOpen size={21} />
+            <h2 id="knowledge-title">Maternal knowledge center</h2>
+          </div>
+          <p className="mother-help-knowledge-intro">
+            Simple educational information to help you prepare and stay connected
+            with your care team.
+          </p>
+          <div className="mother-help-knowledge-grid">
+            <article>
+              <h3>Antenatal care</h3>
+              <p>Keep your appointments and share questions or concerns with a qualified health professional.</p>
+            </article>
+            <article>
+              <h3>Prepare for appointments</h3>
+              <p>Bring your questions, relevant health information, and any follow-up instructions you have received.</p>
+            </article>
+            <article>
+              <h3>Stay connected</h3>
+              <p>Your CHW can help you understand follow-up information and the next step in your care journey.</p>
+            </article>
+            <article>
+              <h3>When to seek urgent help</h3>
+              <p>If you believe you or your baby may be in immediate danger, seek emergency medical care now.</p>
+              <Link className="mother-help-emergency-link" to="/emergency">Open Emergency Help <ArrowRight size={17} /></Link>
+            </article>
+          </div>
+          <p className="mother-help-knowledge-disclaimer">
+            Educational information only. This does not replace advice from a qualified healthcare professional.
+          </p>
+          <p className="mother-help-sources">Sources &amp; further reading are configured by your local health programme.</p>
+        </section>
+
         {/* FAQ */}
         <section className="mother-help-section">
           <div className="mother-help-section-heading">
@@ -143,6 +178,10 @@ function MotherHelp() {
               have an emergency, seek appropriate medical
               care immediately.
             </p>
+            <Link className="mother-help-emergency-link" to="/emergency">
+              Open Emergency Help
+              <ArrowRight size={17} />
+            </Link>
           </div>
         </section>
 

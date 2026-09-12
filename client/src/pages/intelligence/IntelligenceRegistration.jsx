@@ -4,6 +4,7 @@ import {
   Eye,
   EyeOff,
   LockKeyhole,
+  Loader2,
   Mail,
   Phone,
   ShieldCheck,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PublicHeader } from "../PublicSite";
 import "./IntelligenceAuth.css";
 
 
@@ -90,7 +92,8 @@ function IntelligenceRegistration() {
   };
 
   return (
-    <main className="intelligence-auth-page">
+    <main className="intelligence-auth-page intelligence-registration-page">
+      <PublicHeader />
       <div className="intelligence-auth-shell">
         <button
           className="intelligence-back-button"
@@ -198,10 +201,23 @@ function IntelligenceRegistration() {
               className="intelligence-auth-submit"
               type="submit"
               disabled={loading}
+              aria-busy={loading}
             >
-              {loading ? "Creating account..." : "Create account"}
-
-              {!loading && <ArrowRight size={18} />}
+              {loading ? (
+                <>
+                  <Loader2
+                    size={18}
+                    className="intelligence-auth-spinner"
+                    aria-hidden="true"
+                  />
+                  <span>Creating account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create account</span>
+                  <ArrowRight size={18} aria-hidden="true" />
+                </>
+              )}
             </button>
           </form>
 

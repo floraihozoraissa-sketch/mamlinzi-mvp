@@ -9,7 +9,7 @@ import {
   LogOut,
   MessageCircle,
   ShieldCheck,
-  UserRound,
+  Siren,
 } from "lucide-react";
 import { supabase } from "../../services/supabase";
 import "./MotherDashboard.css";
@@ -27,7 +27,7 @@ function MotherDashboard() {
     loadDashboard();
   }, []);
 
-  const loadDashboard = async () => {
+  async function loadDashboard() {
     try {
       setLoading(true);
       setError("");
@@ -69,7 +69,7 @@ function MotherDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -191,6 +191,14 @@ function MotherDashboard() {
             </div>
 
           </div>
+
+          <button
+            className="mother-emergency-button"
+            onClick={() => navigate("/emergency")}
+          >
+            <Siren size={18} aria-hidden="true" />
+            <span>Emergency help</span>
+          </button>
 
           <button
             className="mother-signout"

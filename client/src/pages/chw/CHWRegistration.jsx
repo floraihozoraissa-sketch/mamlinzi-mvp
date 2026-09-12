@@ -4,6 +4,7 @@ import {
   Eye,
   EyeOff,
   LockKeyhole,
+  Loader2,
   Mail,
   Phone,
   UserRound,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PublicHeader } from "../PublicSite";
 import "./CHWAuth.css";
 
 
@@ -90,7 +92,8 @@ function CHWRegistration() {
   };
 
   return (
-    <main className="chw-auth-page">
+    <main className="chw-auth-page chw-registration-page">
+      <PublicHeader />
       <div className="chw-auth-shell">
         <button
           className="chw-back-button"
@@ -211,10 +214,23 @@ function CHWRegistration() {
               className="chw-auth-submit"
               type="submit"
               disabled={loading}
+              aria-busy={loading}
             >
-              {loading ? "Creating account..." : "Create account"}
-
-              {!loading && <ArrowRight size={18} />}
+              {loading ? (
+                <>
+                  <Loader2
+                    size={18}
+                    className="chw-auth-spinner"
+                    aria-hidden="true"
+                  />
+                  <span>Creating account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create account</span>
+                  <ArrowRight size={18} aria-hidden="true" />
+                </>
+              )}
             </button>
           </form>
 

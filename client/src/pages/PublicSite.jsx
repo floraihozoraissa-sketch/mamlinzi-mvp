@@ -1,4 +1,4 @@
-import { ArrowRight, HeartHandshake, Mail, ShieldCheck, UsersRound } from "lucide-react";
+import { ArrowRight, HeartHandshake, Mail, ShieldCheck, Siren, UsersRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import MaMlinziLogo from "../components/MaMlinziLogo";
 import "./PublicSite.css";
@@ -16,6 +16,7 @@ export function PublicHeader() {
                 <Link to="/">Home</Link>
                 <Link to="/about">About Us</Link>
                 <Link to="/contact">Contact Us</Link>
+                <Link className="public-nav-emergency" to="/emergency"><Siren size={16} aria-hidden="true" /> Emergency Help</Link>
                 <button className="public-nav-signup" onClick={() => navigate("/signup")}>Sign up</button>
                 <button className="public-nav-login" onClick={() => navigate("/mother/login")}>Log in</button>
             </nav>
@@ -35,6 +36,7 @@ function PublicSite() {
                     <div className="public-actions">
                         <Link className="public-primary-action" to="/signup">Get started <ArrowRight size={18} /></Link>
                         <Link className="public-secondary-action" to="/mother/login">Sign in</Link>
+                        <Link className="public-emergency-action" to="/emergency"><Siren size={18} aria-hidden="true" /> Emergency Help</Link>
                     </div>
                     <p className="public-disclaimer"><ShieldCheck size={17} /> MaMlinzi provides digital decision support. Healthcare professionals remain responsible for clinical decisions.</p>
                 </div>

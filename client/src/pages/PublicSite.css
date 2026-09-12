@@ -65,6 +65,16 @@
   background: var(--mm-purple) !important;
   color: #fff !important;
 }
+.public-nav-emergency {
+  gap: 6px;
+  border-radius: 8px;
+  color: #b42318 !important;
+}
+.public-nav-emergency:hover,
+.public-nav-emergency:focus-visible {
+  background: #ffe9e6;
+  color: #8f1d14 !important;
+}
 .public-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.75fr);
@@ -117,6 +127,24 @@
   border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
+}
+.public-emergency-action {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 17px;
+  border: 1px solid #b42318;
+  border-radius: 8px;
+  color: #b42318;
+  font-weight: 700;
+  text-decoration: none;
+}
+.public-emergency-action:hover,
+.public-emergency-action:focus-visible {
+  background: #b42318;
+  color: #fff;
 }
 .public-primary-action {
   background: var(--mm-purple);
@@ -310,6 +338,9 @@
   }
   .public-nav a:first-child {
     display: inline-flex;
+  }
+  .public-nav-emergency {
+    display: inline-flex !important;
   }
   .public-nav button {
     min-height: 38px;

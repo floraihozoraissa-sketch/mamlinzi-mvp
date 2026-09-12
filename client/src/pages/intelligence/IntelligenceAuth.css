@@ -5,6 +5,18 @@
   background: var(--mm-background);
 }
 
+.intelligence-registration-page {
+  display: block;
+  min-height: 100dvh;
+  padding-bottom: 48px;
+  background: var(--mm-background);
+}
+
+.intelligence-registration-page .intelligence-auth-shell {
+  width: min(100% - 36px, 560px);
+  margin: 32px auto 0;
+}
+
 /* =========================================
    BRAND PANEL
 ========================================= */
@@ -611,6 +623,22 @@
 .intelligence-auth-submit:hover {
   background: var(--mm-purple-dark);
   color: #fff;
+}
+
+.intelligence-auth-submit:disabled {
+  opacity: 0.78;
+  cursor: wait;
+}
+
+.intelligence-auth-spinner {
+  flex: 0 0 auto;
+  animation: intelligenceAuthSpin 0.9s linear infinite;
+}
+
+@keyframes intelligenceAuthSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .intelligence-auth-message {

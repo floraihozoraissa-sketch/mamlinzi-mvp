@@ -5,11 +5,13 @@ import {
   Eye,
   EyeOff,
   LockKeyhole,
+  Loader2,
   Mail,
   Phone,
   UserRound,
 } from "lucide-react";
 import MamlinziLogo from "../../components/MaMlinziLogo";
+import { PublicHeader } from "../PublicSite";
 import "./MotherAuth.css";
 
 function MotherRegistration() {
@@ -34,21 +36,21 @@ function MotherRegistration() {
     setLoading(true);
 
     try {
-  const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/api/auth/register`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        fullName,
-        email,
-        phone,
-        password,
-      }),
-    }
-  );
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullName,
+            email,
+            phone,
+            password,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -77,7 +79,8 @@ function MotherRegistration() {
   };
 
   return (
-    <main className="mother-auth-page">
+    <main className="mother-auth-page mother-registration-page">
+      <PublicHeader />
       <section className="mother-auth-card mother-register-card">
         <div className="mother-auth-brand">
           <MamlinziLogo compact className="mother-auth-logo" />
@@ -230,14 +233,23 @@ function MotherRegistration() {
             type="submit"
             className="mother-primary-button"
             disabled={loading}
+            aria-busy={loading}
           >
-            <span>
-              {loading
-                ? "Creating account..."
-                : "Create account"}
-            </span>
-
-            {!loading && <ArrowRight size={18} />}
+            {loading ? (
+              <>
+                <Loader2
+                  className="mother-button-spinner"
+                  size={18}
+                  aria-hidden="true"
+                />
+                <span>Creating account...</span>
+              </>
+            ) : (
+              <>
+                <span>Create account</span>
+                <ArrowRight size={18} aria-hidden="true" />
+              </>
+            )}
           </button>
         </form>
 

@@ -14,6 +14,7 @@ import RoleSelection from "./pages/RoleSelection";
 import CHWRegistration from "./pages/chw/CHWRegistration";
 import IntelligenceRegistration from "./pages/intelligence/IntelligenceRegistration";
 import PublicSite, { PublicInfo } from "./pages/PublicSite";
+import EmergencyHelp from "./pages/EmergencyHelp";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/about" element={<PublicInfo type="about" />} />
         <Route path="/contact" element={<PublicInfo type="contact" />} />
         <Route path="/signup" element={<RoleSelection />} />
+        <Route path="/emergency" element={<EmergencyHelp />} />
 
         <Route
           path="/mother/login"

@@ -140,6 +140,67 @@
   font-weight: 500;
 }
 
+.mother-help-knowledge {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid var(--mm-border);
+  border-radius: var(--mm-radius-lg);
+  background: var(--mm-white);
+}
+
+.mother-help-knowledge-intro,
+.mother-help-sources {
+  margin: 0 0 16px;
+  color: var(--mm-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.mother-help-knowledge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mother-help-knowledge-grid article {
+  padding: 15px;
+  border: 1px solid var(--mm-border);
+  border-radius: 10px;
+  background: var(--mm-background);
+}
+
+.mother-help-knowledge-grid h3 {
+  margin: 0 0 6px;
+  color: var(--mm-text);
+  font-size: 15px;
+}
+
+.mother-help-knowledge-grid p {
+  margin: 0;
+  color: var(--mm-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mother-help-knowledge-grid .mother-help-emergency-link {
+  margin-top: 10px;
+}
+
+.mother-help-knowledge-disclaimer {
+  margin: 16px 0 7px;
+  padding: 12px;
+  border-left: 3px solid var(--mm-teal);
+  background: var(--mm-teal-light);
+  color: var(--mm-text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mother-help-sources {
+  margin: 0;
+  font-size: 12px;
+}
+
 /* FAQ */
 
 .mother-help-section {
@@ -267,4 +328,28 @@
     width: 42px;
     height: 42px;
   }
+
+  .mother-help-knowledge {
+    padding: 17px;
+  }
+
+  .mother-help-knowledge-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mother-help-emergency-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  color: var(--mm-high);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mother-help-emergency-link:hover,
+.mother-help-emergency-link:focus-visible {
+  text-decoration: underline;
 }

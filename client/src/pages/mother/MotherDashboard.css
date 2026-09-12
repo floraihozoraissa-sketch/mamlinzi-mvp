@@ -245,6 +245,28 @@
   cursor: pointer;
 }
 
+.mother-emergency-button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid rgba(180, 35, 24, 0.35);
+  border-radius: 8px;
+  background: #fff8f7;
+  color: #a52318;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mother-emergency-button:hover,
+.mother-emergency-button:focus-visible {
+  background: #b42318;
+  color: #fff;
+}
+
 .mother-signout:hover {
   border-radius: 8px;
   background: var(--mm-purple);
@@ -850,6 +872,15 @@
   }
 
   .mother-signout span {
+    display: none;
+  }
+
+  .mother-emergency-button {
+    width: 36px;
+    padding: 0;
+  }
+
+  .mother-emergency-button span {
     display: none;
   }
 

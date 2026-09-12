@@ -7,6 +7,20 @@
   background: var(--mm-background);
 }
 
+.chw-registration-page {
+  display: block;
+  padding: 0 18px 40px;
+}
+
+.chw-registration-page .public-header {
+  width: calc(100% + 36px);
+  margin-left: -18px;
+}
+
+.chw-registration-page .chw-auth-shell {
+  margin: 30px auto 0;
+}
+
 .chw-auth-shell {
   position: relative;
   width: 100%;
@@ -138,8 +152,19 @@
 }
 
 .chw-auth-submit:disabled {
-  opacity: 0.65;
+  opacity: 0.78;
   cursor: wait;
+}
+
+.chw-auth-spinner {
+  flex: 0 0 auto;
+  animation: chwAuthSpin 0.9s linear infinite;
+}
+
+@keyframes chwAuthSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .chw-auth-message {
@@ -187,6 +212,16 @@
 }
 
 @media (max-width: 520px) {
+  .chw-registration-page {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .chw-registration-page .public-header {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+  }
+
   .chw-auth-card {
     padding: 25px 20px;
   }

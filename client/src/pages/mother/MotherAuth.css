@@ -12,6 +12,20 @@
   );
 }
 
+.mother-registration-page {
+  display: block;
+  padding: 0 16px 40px;
+}
+
+.mother-registration-page .public-header {
+  width: calc(100% + 32px);
+  margin-left: -16px;
+}
+
+.mother-registration-page .mother-auth-card {
+  margin: 40px auto 0;
+}
+
 .mother-auth-card {
   width: 100%;
   max-width: 440px;
@@ -264,6 +278,16 @@
 }
 
 @media (max-width: 380px) {
+  .mother-registration-page {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .mother-registration-page .public-header {
+    width: calc(100% + 24px);
+    margin-left: -12px;
+  }
+
   .mother-auth-card {
     padding: 24px 16px;
     border-radius: 16px;

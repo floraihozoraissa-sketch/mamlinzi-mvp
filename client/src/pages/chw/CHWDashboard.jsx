@@ -585,7 +585,16 @@ function CHWDashboard() {
                 }
                 placeholder="Search mothers..."
                 aria-label="Search mothers"
+                list="authorized-mother-suggestions"
               />
+
+              <datalist id="authorized-mother-suggestions">
+                {[...new Set(cases.map(getMotherName))]
+                  .filter((name) => name !== "Mother")
+                  .map((name) => (
+                    <option value={name} key={name} />
+                  ))}
+              </datalist>
             </div>
 
             <div className="chw-filters">
