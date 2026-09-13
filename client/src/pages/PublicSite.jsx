@@ -1,69 +1,17 @@
-import { ArrowRight, HeartHandshake, Mail, ShieldCheck, Siren, UsersRound } from "lucide-react";
+import { Activity, ArrowRight, Baby, BookOpen, CalendarCheck, CircleAlert, HeartHandshake, HeartPulse, Mail, Phone, ShieldCheck, Siren, UsersRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import maternalHero from "../assets/maternal-hero.jpg";
+import clinician from "../assets/rwanda-clinician.jpg";
 import MaMlinziLogo from "../components/MaMlinziLogo";
 import "./PublicSite.css";
 
-export function PublicHeader() {
-    const navigate = useNavigate();
+const topics = [[CalendarCheck,"Antenatal care","Prepare for visits and keep track of what matters."],[Baby,"Birth preparedness","Plan ahead with the people who support you."],[HeartPulse,"Pregnancy wellbeing","Small, practical ways to care for yourself."],[BookOpen,"Appointments","Know what to ask and how to prepare."],[CircleAlert,"Urgent warning signs","Know when to seek urgent medical attention."]];
 
-    return (
-        <header className="public-header">
-            <Link className="public-brand" to="/" aria-label="MaMlinzi home">
-                <MaMlinziLogo compact />
-                <span>MaMlinzi</span>
-            </Link>
-            <nav className="public-nav" aria-label="Public navigation">
-                <Link to="/">Home</Link>
-                <Link to="/about">About Us</Link>
-                <Link to="/contact">Contact Us</Link>
-                <Link className="public-nav-emergency" to="/emergency"><Siren size={16} aria-hidden="true" /> Emergency Help</Link>
-                <button className="public-nav-signup" onClick={() => navigate("/signup")}>Sign up</button>
-                <button className="public-nav-login" onClick={() => navigate("/mother/login")}>Log in</button>
-            </nav>
-        </header>
-    );
-}
+export function PublicHeader() { const navigate=useNavigate(); return <header className="public-header"><Link className="public-brand" to="/" aria-label="MaMlinzi home"><MaMlinziLogo compact/><span>MaMlinzi</span></Link><nav className="public-nav" aria-label="Public navigation"><Link to="/">Home</Link><Link to="/about">About</Link><a href="/#how-it-works">How it works</a><Link to="/contact">Contact</Link><Link className="public-nav-emergency" to="/emergency"><Siren size={16}/> Emergency help</Link><button className="public-nav-login" onClick={()=>navigate("/mother/login")}>Sign in</button><button className="public-nav-signup" onClick={()=>navigate("/signup")}>Get started</button></nav></header>; }
 
-function PublicSite() {
-    return (
-        <main className="public-site">
-            <PublicHeader />
-            <section className="public-hero">
-                <div className="public-hero-copy">
-                    <p className="public-eyebrow">MATERNAL CARE | CONNECTION | ACTION</p>
-                    <h1>Supporting safer maternal care through timely information and follow-up.</h1>
-                    <p className="public-lead">MaMlinzi connects mothers, community health workers, and health programmes so the right people can stay informed and connected.</p>
-                    <div className="public-actions">
-                        <Link className="public-primary-action" to="/signup">Get started <ArrowRight size={18} /></Link>
-                        <Link className="public-secondary-action" to="/mother/login">Sign in</Link>
-                        <Link className="public-emergency-action" to="/emergency"><Siren size={18} aria-hidden="true" /> Emergency Help</Link>
-                    </div>
-                    <p className="public-disclaimer"><ShieldCheck size={17} /> MaMlinzi provides digital decision support. Healthcare professionals remain responsible for clinical decisions.</p>
-                </div>
-                <div className="public-hero-panel" aria-label="MaMlinzi connects care teams">
-                    <div className="public-panel-mark"><HeartHandshake size={34} /></div>
-                    <span>One connected care picture</span>
-                    <strong>Information that helps teams follow up sooner.</strong>
-                    <div className="public-panel-flow"><span>Mother</span><ArrowRight size={16} /><span>CHW</span><ArrowRight size={16} /><span>Programme</span></div>
-                </div>
-            </section>
-            <section className="public-section public-section-light">
-                <div className="public-section-heading"><p className="public-eyebrow">HOW IT WORKS</p><h2>Simple support for every part of the care journey.</h2></div>
-                <div className="public-feature-grid">
-                    <article><div className="public-feature-icon"><HeartHandshake size={22} /></div><h3>Mothers stay informed</h3><p>Complete check-ins, understand the next step, and stay connected with your care team.</p></article>
-                    <article><div className="public-feature-icon teal"><UsersRound size={22} /></div><h3>CHWs see what needs attention</h3><p>Review assigned cases and coordinate follow-up using the information already available to your team.</p></article>
-                    <article><div className="public-feature-icon gold"><ShieldCheck size={22} /></div><h3>Programmes see patterns</h3><p>Health officials can use aggregated information to understand activity and plan support.</p></article>
-                </div>
-            </section>
-            <section className="public-oversight"><div><p className="public-eyebrow">RESPONSIBLE SUPPORT</p><h2>Technology should strengthen human care.</h2></div><p>MaMlinzi does not diagnose medical conditions or replace a qualified healthcare professional. It helps organise information and make follow-up easier to coordinate.</p></section>
-            <footer className="public-footer"><span>© MaMlinzi</span><Link to="/contact"><Mail size={16} /> Contact the team</Link></footer>
-        </main>
-    );
-}
-
-export function PublicInfo({ type }) {
-    const isAbout = type === "about";
-    return <main className="public-site"><PublicHeader /><section className="public-info-page"><p className="public-eyebrow">{isAbout ? "ABOUT MAMLINZI" : "CONTACT US"}</p><h1>{isAbout ? "A clearer way to keep maternal support connected." : "Let us help you get connected."}</h1><p>{isAbout ? "MaMlinzi is a maternal-health support application for mothers, community health workers, and health programmes. It organises check-ins, follow-up, and programme information in one place." : "For account or programme support, contact the team responsible for your MaMlinzi programme. Your local health programme can also help you with access and follow-up."}</p>{isAbout && <p className="public-note"><ShieldCheck size={18} /> General pregnancy information and digital decision support are educational and do not replace personal medical advice.</p>}{!isAbout && <p className="public-note"><Mail size={18} /> Contact details are managed by your local health programme so support reaches the right team.</p>}</section></main>;
-}
-
+function PublicSite() { return <main className="public-site"><PublicHeader/><section className="public-hero"><div className="public-hero-copy"><p className="public-eyebrow">MATERNAL HEALTH SUPPORT</p><h1>Care that stays connected.</h1><p className="public-lead">MaMlinzi helps mothers stay connected to timely information, community health workers, and follow-up support throughout their maternal journey.</p><div className="public-actions"><Link className="public-primary-action" to="/signup">Get started <ArrowRight size={18}/></Link><Link className="public-secondary-action" to="/mother/login">Sign in</Link></div><Link className="public-emergency-action" to="/emergency"><Siren size={18}/> Emergency help</Link><p className="public-disclaimer"><ShieldCheck size={17}/>MaMlinzi supports prioritisation and follow-up. Healthcare professionals remain responsible for clinical decisions.</p></div><div className="public-hero-visual"><img src={maternalHero} alt="Pregnant African woman gently holding her tummy"/><div className="public-photo-label"><HeartHandshake size={18}/><span>Connected support, at every step</span></div></div></section><section className="public-section public-section-light"><div className="public-section-heading"><p className="public-eyebrow">ONE CONNECTED JOURNEY</p><h2>Better follow-up begins with a clearer picture.</h2></div><div className="public-feature-grid"><Feature icon={HeartHandshake} title="Mother">Share how you are feeling and stay connected to your care journey.</Feature><Feature icon={UsersRound} tone="teal" title="CHW">Receive prioritised cases and follow up with mothers.</Feature><Feature icon={Activity} tone="gold" title="Health programmes">See aggregated insights that help teams understand maternal-care needs.</Feature></div></section><section id="how-it-works" className="public-section public-journey"><div className="public-section-heading"><p className="public-eyebrow">HOW IT WORKS</p><h2>Support that moves with the care journey.</h2></div><ol className="public-journey-steps">{[[HeartPulse,"Mother"],[CalendarCheck,"Health check-in"],[ShieldCheck,"MaMlinzi prioritisation"],[UsersRound,"CHW follow-up"],[HeartHandshake,"Follow-up status"],[Activity,"Aggregated insights"]].map(([Icon,label])=><li key={label}><Icon/><span>{label}</span></li>)}</ol><p className="public-journey-note">MaMlinzi supports prioritisation and follow-up. It does not diagnose patients, and clinical decisions remain with qualified healthcare professionals.</p></section><section className="public-knowledge"><div className="public-knowledge-heading"><p className="public-eyebrow">MATERNAL KNOWLEDGE</p><h2>Knowledge when you need it.</h2><p>Clear, practical topics for every stage of your care journey.</p></div><div className="public-topic-grid">{topics.map(([Icon,title,copy])=><article key={title}><Icon size={22}/><h3>{title}</h3><p>{copy}</p></article>)}</div><p className="public-education-note">Educational information only. This does not replace advice from a qualified healthcare professional.</p></section><section className="public-emergency-section"><div><p className="public-eyebrow">URGENT SUPPORT</p><h2>Need urgent help?</h2><p>If you are in immediate danger, do not wait for a response from MaMlinzi. Seek immediate medical care or contact emergency services.</p></div><div className="public-emergency-links"><a href="tel:912">Call Ambulance — 912</a><a href="tel:112">Emergency Services — 112</a><a href="tel:114">Health Support — 114</a></div></section><section className="public-final-cta"><div><p className="public-eyebrow">START TODAY</p><h2>Stay connected to your care journey.</h2></div><div><Link className="public-primary-action" to="/signup">Create an account <ArrowRight size={18}/></Link><Link className="public-secondary-action" to="/mother/login">Sign in</Link></div></section><PublicFooter/></main>; }
+function Feature({icon:Icon,tone="",title,children}) { return <article><div className={`public-feature-icon ${tone}`}><Icon size={22}/></div><h3>{title}</h3><p>{children}</p></article>; }
+function PublicFooter(){return <footer className="public-footer"><div><Link className="public-brand" to="/"><MaMlinziLogo compact/><span>MaMlinzi</span></Link><p>MaMlinzi is a digital support and care-coordination platform. It does not replace professional medical care.</p></div><nav><Link to="/">Home</Link><Link to="/about">About</Link><a href="/#how-it-works">How it works</a><Link to="/contact">Contact</Link><Link to="/emergency">Emergency help</Link></nav></footer>;}
+export function PublicInfo({type}){const about=type==="about";return <main className="public-site"><PublicHeader/>{about?<section className="public-info-page public-about"><div><p className="public-eyebrow">ABOUT MAMLINZI</p><h1>Building a more connected maternal-care journey.</h1><p>MaMlinzi connects information, prioritisation, follow-up, and programme visibility in one supportive journey.</p></div><img src={clinician} alt="Rwandan healthcare professional at work in a clinic"/><div className="public-about-body"><div><h2>Why MaMlinzi?</h2><p>When information and follow-up are disconnected, mothers and care teams can lose a clear view of what happens next. MaMlinzi helps keep that journey visible and coordinated.</p></div><div className="public-approach"><Feature icon={HeartHandshake} title="Connect">Keep mothers and care teams connected.</Feature><Feature icon={ShieldCheck} title="Support">Help prioritise cases for appropriate follow-up.</Feature><Feature icon={Activity} title="Inform">Give programmes useful aggregated insights.</Feature></div><div className="public-note"><ShieldCheck size={19}/><p><strong>Responsible decision support.</strong> MaMlinzi uses transparent decision-support logic in its current MVP. It is designed to support—not replace—qualified healthcare professionals.</p></div></div></section>:<ContactPage/>}<PublicFooter/></main>;}
+function ContactPage(){return <section className="public-info-page public-contact"><p className="public-eyebrow">CONTACT</p><h1>Talk to the MaMlinzi team.</h1><p>Send us a message and the team responsible for your MaMlinzi programme can follow up.</p><form onSubmit={event=>event.preventDefault()}><label>Name<input required autoComplete="name"/></label><label>Email<input type="email" required autoComplete="email"/></label><label>Subject<input required/></label><label>Message<textarea required rows="5"/></label><button className="public-primary-action" type="submit">Send message <Mail size={18}/></button></form><Link className="public-contact-emergency" to="/emergency"><Phone size={18}/>Need urgent help? Find emergency contacts</Link></section>;}
 export default PublicSite;

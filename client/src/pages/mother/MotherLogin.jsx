@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { supabase } from "../../services/supabase";
 import MamlinziLogo from "../../components/MaMlinziLogo";
+import { PublicHeader } from "../PublicSite";
 import "./MotherAuth.css";
 
 function MotherLogin() {
@@ -66,6 +67,7 @@ function MotherLogin() {
 
   return (
     <main className="mother-auth-page">
+      <PublicHeader />
       <section className="mother-auth-card">
         <div className="mother-auth-brand">
           <MamlinziLogo compact className="mother-auth-logo" />

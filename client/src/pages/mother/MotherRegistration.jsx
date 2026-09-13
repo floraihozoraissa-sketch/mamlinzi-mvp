@@ -60,13 +60,7 @@ function MotherRegistration() {
         return;
       }
 
-      setSuccess(
-        "Your account was created successfully. You can now sign in."
-      );
-
-      setTimeout(() => {
-        navigate("/mother/login");
-      }, 1200);
+      setSuccess("Your account was created successfully.");
     } catch (error) {
       console.error(error);
 
@@ -77,6 +71,23 @@ function MotherRegistration() {
 
     setLoading(false);
   };
+
+  if (success) {
+    return (
+      <main className="mother-auth-page mother-registration-page">
+        <PublicHeader />
+        <section className="mother-auth-card mother-register-card mother-welcome-card">
+          <MamlinziLogo compact className="mother-auth-logo" />
+          <p className="mother-auth-eyebrow">WELCOME TO MAMLINZI</p>
+          <h1>Your care journey starts here.</h1>
+          <p>Your account is ready. Sign in to continue to MaMlinzi.</p>
+          <button className="mother-primary-button" onClick={() => navigate("/mother/login")}>
+            Continue to MaMlinzi <ArrowRight size={18} aria-hidden="true" />
+          </button>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="mother-auth-page mother-registration-page">
@@ -209,6 +220,9 @@ function MotherRegistration() {
                 )}
               </button>
             </div>
+            <span className="mother-field-hint">
+              Use at least 6 characters. Choose a password only you know.
+            </span>
           </div>
 
           {error && (
