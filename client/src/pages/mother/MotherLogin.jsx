@@ -28,6 +28,7 @@ function MotherLogin() {
     setError("");
     setLoading(true);
 
+    try {
     const { data, error: loginError } =
       await supabase.auth.signInWithPassword({
         email,
@@ -35,7 +36,7 @@ function MotherLogin() {
       });
 
     if (loginError) {
-      setError(loginError.message);
+      setError("The email or password you entered is incorrect.");
       setLoading(false);
       return;
     }
@@ -63,6 +64,11 @@ function MotherLogin() {
     }
 
     navigate("/mother");
+    } catch (err) {
+      console.error("MOTHER LOGIN ERROR:", err);
+      setError("Something went wrong while signing you in. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (

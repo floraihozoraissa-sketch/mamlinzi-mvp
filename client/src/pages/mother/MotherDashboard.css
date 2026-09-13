@@ -634,9 +634,9 @@
 }
 
 .mother-journey-step.current .mother-journey-marker {
-  border-color: var(--mm-purple);
-  background: var(--mm-purple-light);
-  color: var(--mm-purple);
+  border-color: var(--mm-teal);
+  background: var(--mm-teal-light);
+  color: var(--mm-teal);
 }
 
 .mother-journey-line {
@@ -670,7 +670,7 @@
 }
 
 .mother-journey-step.current .mother-journey-content span {
-  color: var(--mm-purple);
+  color: var(--mm-teal);
 }
 
 .mother-journey-content h4 {

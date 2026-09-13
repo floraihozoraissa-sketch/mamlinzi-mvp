@@ -15,6 +15,7 @@ import CHWRegistration from "./pages/chw/CHWRegistration";
 import IntelligenceRegistration from "./pages/intelligence/IntelligenceRegistration";
 import PublicSite, { PublicInfo } from "./pages/PublicSite";
 import EmergencyHelp from "./pages/EmergencyHelp";
+import NotFound from "./pages/NotFound";
 
 
 function App() {
@@ -88,6 +89,7 @@ function App() {
           path="/intelligence/register"
           element={<IntelligenceRegistration />}
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

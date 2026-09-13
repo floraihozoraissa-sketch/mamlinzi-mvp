@@ -109,6 +109,7 @@ function CHWDashboard() {
   }
 
   const handleSignOut = async () => {
+    if (!window.confirm("Are you sure you want to sign out?")) return;
     await supabase.auth.signOut();
     navigate("/chw/login");
   };

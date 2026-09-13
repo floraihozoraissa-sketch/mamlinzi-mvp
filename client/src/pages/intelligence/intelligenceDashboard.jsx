@@ -121,6 +121,7 @@ function IntelligenceDashboard() {
   }
 
   async function handleLogout() {
+    if (!window.confirm("Are you sure you want to sign out?")) return;
     await supabase.auth.signOut();
     navigate("/intelligence/login");
   }

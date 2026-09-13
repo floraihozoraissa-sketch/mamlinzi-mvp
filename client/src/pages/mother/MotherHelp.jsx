@@ -52,10 +52,23 @@ function MotherHelp() {
               understand your follow-up and what to do next.
             </p>
 
-            <a href="/mother/journey">
-              View my care journey
+            <a href="#contact-chw">
+              How to contact my CHW
               <ArrowRight size={17} />
             </a>
+          </div>
+        </section>
+
+        <section id="contact-chw" className="mother-help-card">
+          <div className="mother-help-card-icon teal">
+            <MessageCircle size={22} />
+          </div>
+          <div className="mother-help-card-content">
+            <span className="mother-help-label">CONTACTING YOUR CHW</span>
+            <h2>How to talk to your CHW</h2>
+            <p>Use the phone number shared by your local health programme. Explain how you are feeling, mention your latest check-in if you completed one, and ask about your next step.</p>
+            <p>If you believe you or your baby may be in immediate danger, use Emergency Help instead of waiting for a CHW response.</p>
+            <Link className="mother-help-emergency-link" to="/emergency">Open Emergency Help <ArrowRight size={17} /></Link>
           </div>
         </section>
 
