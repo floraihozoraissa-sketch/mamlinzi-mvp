@@ -15,5 +15,6 @@ Assets are locally hosted rather than hotlinked, and rendered with descriptive a
 | --- | --- |
 | `homepage-mother.jpeg` | Homepage hero |
 | `homepage-doctor.jpeg` | Homepage care-team visual and About page |
+| `maternal-consultation.jpeg` | About-page supportive maternal-care consultation |
 
 These files were supplied directly by the project owner. Confirm their usage rights before public deployment.

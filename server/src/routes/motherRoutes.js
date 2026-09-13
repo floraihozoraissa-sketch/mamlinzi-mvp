@@ -4,6 +4,8 @@ const router = express.Router();
 
 const requireAuth =
   require("../middleware/authMiddleware");
+const requireMother =
+  require("../middleware/requireMother");
 
 const {
   getMotherDashboard,
@@ -12,6 +14,7 @@ const {
 router.get(
   "/dashboard",
   requireAuth,
+  requireMother,
   getMotherDashboard
 );
 
