@@ -8,3 +8,12 @@ These local assets were selected from the approved candidate sources and verifie
 | `rwanda-clinician.jpg` | https://www.pexels.com/photo/confident-female-doctor-at-work-in-rwanda-37454254/ | Musinga Pictures | About page |
 
 Assets are locally hosted rather than hotlinked, and rendered with descriptive alt text.
+
+## User-provided homepage images
+
+| Local asset | Placement |
+| --- | --- |
+| `homepage-mother.jpeg` | Homepage hero |
+| `homepage-doctor.jpeg` | Homepage care-team visual and About page |
+
+These files were supplied directly by the project owner. Confirm their usage rights before public deployment.

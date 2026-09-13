@@ -1,7 +1,7 @@
 import { Activity, ArrowRight, Baby, BookOpen, CalendarCheck, CircleAlert, HeartHandshake, HeartPulse, Mail, Phone, ShieldCheck, Siren, UsersRound } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import maternalHero from "../assets/maternal-hero.jpg";
-import clinician from "../assets/rwanda-clinician.jpg";
+import maternalHero from "../assets/homepage-mother.jpeg";
+import clinician from "../assets/homepage-doctor.jpeg";
 import MaMlinziLogo from "../components/MaMlinziLogo";
 import "./PublicSite.css";
 
