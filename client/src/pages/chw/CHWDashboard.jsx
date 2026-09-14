@@ -29,6 +29,7 @@ function CHWDashboard() {
   const [filter, setFilter] = useState("all");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
 
   useEffect(() => {
     loadCases();
@@ -109,7 +110,6 @@ function CHWDashboard() {
   }
 
   const handleSignOut = async () => {
-    if (!window.confirm("Are you sure you want to sign out?")) return;
     await supabase.auth.signOut();
     navigate("/chw/login");
   };
@@ -402,7 +402,7 @@ function CHWDashboard() {
 
           <button
             className="chw-signout"
-            onClick={handleSignOut}
+            onClick={() => setShowSignOutDialog(true)}
             aria-label="Sign out"
           >
             <LogOut size={18} />
@@ -454,7 +454,7 @@ function CHWDashboard() {
               </button>
 
               <button
-                onClick={handleSignOut}
+                onClick={() => setShowSignOutDialog(true)}
               >
                 <LogOut size={19} />
                 Sign out
@@ -721,6 +721,19 @@ function CHWDashboard() {
           )}
         </section>
       </main>
+      {showSignOutDialog && (
+        <div className="dashboard-dialog-backdrop" role="presentation">
+          <section className="dashboard-dialog" role="dialog" aria-modal="true" aria-labelledby="chw-signout-title">
+            <div className="chw-state-icon"><LogOut size={22} /></div>
+            <h2 id="chw-signout-title">Are you sure you want to sign out?</h2>
+            <p>You can sign back in whenever you are ready.</p>
+            <div className="dashboard-dialog-actions">
+              <button className="dashboard-outline-button" onClick={() => setShowSignOutDialog(false)}>Cancel</button>
+              <button className="chw-primary-button" onClick={handleSignOut}>Sign out</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

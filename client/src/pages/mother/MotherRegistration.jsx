@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
@@ -76,6 +77,9 @@ function MotherRegistration() {
     return (
       <main className="mother-auth-page mother-registration-page">
         <PublicHeader />
+        <button type="button" className="mother-auth-back" onClick={() => navigate("/")}>
+          <ArrowLeft size={17} /> Back to welcome
+        </button>
         <section className="mother-auth-card mother-register-card mother-welcome-card">
           <MamlinziLogo compact className="mother-auth-logo" />
           <p className="mother-auth-eyebrow">WELCOME TO MAMLINZI</p>
@@ -92,6 +96,9 @@ function MotherRegistration() {
   return (
     <main className="mother-auth-page mother-registration-page">
       <PublicHeader />
+      <button type="button" className="mother-auth-back" onClick={() => navigate("/")}>
+        <ArrowLeft size={17} /> Back to welcome
+      </button>
       <section className="mother-auth-card mother-register-card">
         <div className="mother-auth-brand">
           <MamlinziLogo compact className="mother-auth-logo" />

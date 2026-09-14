@@ -16,11 +16,8 @@ import {
   TrendingUp,
   Users,
   X,
-  ClipboardList,
   CheckCircle2,
-  Network,
   BarChart3,
-  Bell
 } from "lucide-react";
 
 import { supabase } from "../../services/supabase";
@@ -38,6 +35,8 @@ function IntelligenceDashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showSignOutDialog, setShowSignOutDialog] = useState(false);
+  const [showActivity, setShowActivity] = useState(false);
 
   useEffect(() => {
     loadDashboard();
@@ -99,7 +98,7 @@ function IntelligenceDashboard() {
       if (!response.ok) {
         throw new Error(
           data.error ||
-            "Could not load intelligence data."
+          "Could not load intelligence data."
         );
       }
 
@@ -112,7 +111,7 @@ function IntelligenceDashboard() {
 
       setError(
         err.message ||
-          "Could not load the Intelligence Hub."
+        "Could not load the Intelligence Hub."
       );
     } finally {
       setLoading(false);
@@ -121,7 +120,6 @@ function IntelligenceDashboard() {
   }
 
   async function handleLogout() {
-    if (!window.confirm("Are you sure you want to sign out?")) return;
     await supabase.auth.signOut();
     navigate("/intelligence/login");
   }
@@ -140,60 +138,60 @@ function IntelligenceDashboard() {
 
     const totalMothers = Number(
       source.totalMothers ??
-        source.total_mothers ??
-        source.mothers ??
-        dashboard?.totalMothers ??
-        0
+      source.total_mothers ??
+      source.mothers ??
+      dashboard?.totalMothers ??
+      0
     );
 
     const highPriority = Number(
       source.highPriority ??
-        source.high_priority ??
-        source.highRisk ??
-        source.high_risk ??
-        dashboard?.highPriority ??
-        0
+      source.high_priority ??
+      source.highRisk ??
+      source.high_risk ??
+      dashboard?.highPriority ??
+      0
     );
 
     const mediumPriority = Number(
       source.mediumPriority ??
-        source.medium_priority ??
-        source.mediumRisk ??
-        source.medium_risk ??
-        dashboard?.mediumPriority ??
-        0
+      source.medium_priority ??
+      source.mediumRisk ??
+      source.medium_risk ??
+      dashboard?.mediumPriority ??
+      0
     );
 
     const lowPriority = Number(
       source.lowPriority ??
-        source.low_priority ??
-        source.lowRisk ??
-        source.low_risk ??
-        dashboard?.lowPriority ??
-        0
+      source.low_priority ??
+      source.lowRisk ??
+      source.low_risk ??
+      dashboard?.lowPriority ??
+      0
     );
 
     const completedFollowups = Number(
       source.completedFollowups ??
-        source.completed_followups ??
-        source.followupsCompleted ??
-        dashboard?.completedFollowups ??
-        0
+      source.completed_followups ??
+      source.followupsCompleted ??
+      dashboard?.completedFollowups ??
+      0
     );
 
     const pendingFollowups = Number(
       source.pendingFollowups ??
-        source.pending_followups ??
-        source.followupsPending ??
-        dashboard?.pendingFollowups ??
-        0
+      source.pending_followups ??
+      source.followupsPending ??
+      dashboard?.pendingFollowups ??
+      0
     );
 
     const assessments = Number(
       source.totalAssessments ??
-        source.total_assessments ??
-        dashboard?.totalAssessments ??
-        0
+      source.total_assessments ??
+      dashboard?.totalAssessments ??
+      0
     );
 
     const recentActivity =
@@ -317,42 +315,42 @@ function IntelligenceDashboard() {
   }
 
   if (loading) {
-  return (
-    <div className="intelligence-loading-page">
-      <div className="intelligence-loading-content">
+    return (
+      <div className="intelligence-loading-page">
+        <div className="intelligence-loading-content">
 
-        <div className="intelligence-loading-illustration">
-          <div className="intelligence-loading-mother">
-            <div className="intelligence-loading-head" />
-            <div className="intelligence-loading-body" />
+          <div className="intelligence-loading-illustration">
+            <div className="intelligence-loading-mother">
+              <div className="intelligence-loading-head" />
+              <div className="intelligence-loading-body" />
+            </div>
+
+            <div className="intelligence-loading-baby">
+              <div className="intelligence-loading-baby-head" />
+              <div className="intelligence-loading-baby-body" />
+            </div>
+
+            <div className="intelligence-loading-heart">
+              ♥
+            </div>
           </div>
 
-          <div className="intelligence-loading-baby">
-            <div className="intelligence-loading-baby-head" />
-            <div className="intelligence-loading-baby-body" />
+          <h2>Preparing your overview</h2>
+
+          <p>
+            Gathering the latest maternal care information...
+          </p>
+
+          <div className="intelligence-loading-dots">
+            <span />
+            <span />
+            <span />
           </div>
 
-          <div className="intelligence-loading-heart">
-            ♥
-          </div>
         </div>
-
-        <h2>Preparing your overview</h2>
-
-        <p>
-          Gathering the latest maternal care information...
-        </p>
-
-        <div className="intelligence-loading-dots">
-          <span />
-          <span />
-          <span />
-        </div>
-
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   if (error && !dashboard) {
     return (
@@ -387,15 +385,14 @@ function IntelligenceDashboard() {
       ========================= */}
 
       <aside
-        className={`hub-sidebar ${
-          mobileMenuOpen
+        className={`hub-sidebar ${mobileMenuOpen
             ? "hub-sidebar-open"
             : ""
-        }`}
+          }`}
       >
         <div className="hub-sidebar-top">
           <div className="hub-brand">
-            <MamlinziLogo/>
+            <MamlinziLogo />
 
             <div>
               <strong>MaMlinzi</strong>
@@ -474,7 +471,7 @@ function IntelligenceDashboard() {
 
           <button
             className="hub-logout"
-            onClick={handleLogout}
+            onClick={() => setShowSignOutDialog(true)}
           >
             <LogOut size={17} />
             Sign out
@@ -559,8 +556,8 @@ function IntelligenceDashboard() {
                 {new Date().getHours() < 12
                   ? "morning"
                   : new Date().getHours() < 18
-                  ? "afternoon"
-                  : "evening"}
+                    ? "afternoon"
+                    : "evening"}
                 {profile?.full_name
                   ? `, ${profile.full_name.split(" ")[0]}`
                   : ""}
@@ -800,18 +797,17 @@ function IntelligenceDashboard() {
               <div className="hub-followup-bar">
                 <span
                   style={{
-                    width: `${
-                      normalized.completedFollowups +
+                    width: `${normalized.completedFollowups +
                         normalized.pendingFollowups >
-                      0
+                        0
                         ? Math.round(
-                            (normalized.completedFollowups /
-                              (normalized.completedFollowups +
-                                normalized.pendingFollowups)) *
-                              100
-                          )
+                          (normalized.completedFollowups /
+                            (normalized.completedFollowups +
+                              normalized.pendingFollowups)) *
+                          100
+                        )
                         : 0
-                    }%`,
+                      }%`,
                   }}
                 />
               </div>
@@ -824,13 +820,13 @@ function IntelligenceDashboard() {
                 <strong>
                   {normalized.completedFollowups +
                     normalized.pendingFollowups >
-                  0
+                    0
                     ? Math.round(
-                        (normalized.completedFollowups /
-                          (normalized.completedFollowups +
-                            normalized.pendingFollowups)) *
-                          100
-                      )
+                      (normalized.completedFollowups /
+                        (normalized.completedFollowups +
+                          normalized.pendingFollowups)) *
+                      100
+                    )
                     : 0}
                   %
                 </strong>
@@ -895,17 +891,17 @@ function IntelligenceDashboard() {
                 </h3>
               </div>
 
-              <button className="hub-view-all">
-                View activity
+              <button className="hub-view-all" onClick={() => setShowActivity((current) => !current)} aria-expanded={showActivity}>
+                {showActivity ? "Show less" : "View activity"}
                 <ChevronRight size={16} />
               </button>
             </div>
 
             {normalized.recentActivity.length >
-            0 ? (
+              0 ? (
               <div className="hub-activity-list">
                 {normalized.recentActivity
-                  .slice(0, 6)
+                  .slice(0, showActivity ? normalized.recentActivity.length : 6)
                   .map((item, index) => (
                     <div
                       className="hub-activity-item"
@@ -992,6 +988,19 @@ function IntelligenceDashboard() {
           </span>
         </footer>
       </main>
+      {showSignOutDialog && (
+        <div className="dashboard-dialog-backdrop" role="presentation">
+          <section className="dashboard-dialog" role="dialog" aria-modal="true" aria-labelledby="hub-signout-title">
+            <div className="hub-error-icon"><LogOut size={22} /></div>
+            <h2 id="hub-signout-title">Are you sure you want to sign out?</h2>
+            <p>You can sign back in whenever you are ready.</p>
+            <div className="dashboard-dialog-actions">
+              <button className="dashboard-outline-button" onClick={() => setShowSignOutDialog(false)}>Cancel</button>
+              <button className="hub-primary-button" onClick={handleLogout}>Sign out</button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   );
 }

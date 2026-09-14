@@ -1,8 +1,35 @@
 .chw-login-page {
+  position: relative;
   min-height: 100vh;
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
   background: var(--mm-background);
+}
+
+.chw-auth-back {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--mm-text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chw-auth-back:hover,
+.chw-auth-back:focus-visible {
+  color: var(--mm-purple);
+  background: var(--mm-purple-light);
 }
 
 /* =========================

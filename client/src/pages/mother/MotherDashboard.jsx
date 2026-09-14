@@ -508,7 +508,7 @@ function MotherDashboard() {
 
               <div className="mother-journey-marker">
 
-                {informationReviewed ? (
+                {informationReviewed || hasCheckin ? (
                   <Check size={17} />
                 ) : (
                   <ShieldCheck size={17} />

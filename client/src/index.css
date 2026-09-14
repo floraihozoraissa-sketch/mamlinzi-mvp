@@ -99,6 +99,24 @@
 
 body {
   margin: 0;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@media (max-width: 460px) {
+  .public-nav {
+    gap: 8px;
+  }
+
+  .public-nav-emergency {
+    font-size: 12px !important;
+    padding: 0 10px !important;
+  }
 }
 
 #root {

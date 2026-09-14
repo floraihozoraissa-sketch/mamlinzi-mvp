@@ -5,6 +5,55 @@
   color: var(--mm-text);
 }
 
+.dashboard-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(37, 43, 58, 0.42);
+}
+
+.dashboard-dialog {
+  width: min(100%, 420px);
+  padding: 28px;
+  border: 1px solid var(--mm-border);
+  border-radius: 16px;
+  background: var(--mm-white);
+  box-shadow: var(--mm-shadow-hover);
+}
+
+.dashboard-dialog h2 {
+  margin: 18px 0 8px;
+  color: var(--mm-text);
+  font-size: 21px;
+}
+
+.dashboard-dialog p {
+  color: var(--mm-text-secondary);
+  line-height: 1.6;
+}
+
+.dashboard-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.dashboard-outline-button {
+  min-height: 44px;
+  padding: 0 15px;
+  border: 1px solid var(--mm-border);
+  border-radius: 9px;
+  background: var(--mm-white);
+  color: var(--mm-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 /* =================================
    SIDEBAR
 ================================= */

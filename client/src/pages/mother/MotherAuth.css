@@ -23,6 +23,28 @@
   margin: auto;
 }
 
+.mother-auth-back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  margin: 16px auto 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--mm-text-secondary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mother-auth-back:hover,
+.mother-auth-back:focus-visible {
+  color: var(--mm-purple);
+}
+
 .mother-registration-page {
   display: block;
   padding: 0 16px 40px;

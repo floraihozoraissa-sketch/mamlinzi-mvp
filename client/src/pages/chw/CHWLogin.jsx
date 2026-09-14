@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowLeft,
   Eye,
   EyeOff,
   LockKeyhole,
@@ -92,6 +93,9 @@ function CHWLogin() {
 
   return (
     <div className="chw-login-page">
+      <button type="button" className="chw-auth-back" onClick={() => navigate("/")}>
+        <ArrowLeft size={17} /> Back to welcome
+      </button>
       {/* Brand panel */}
       <section className="chw-login-brand">
         <div className="chw-login-brand-content">

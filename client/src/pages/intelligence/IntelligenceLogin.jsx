@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowLeft,
   Eye,
   EyeOff,
   LockKeyhole,
@@ -88,6 +89,9 @@ function IntelligenceLogin() {
 
   return (
     <div className="intelligence-auth-page">
+      <button type="button" className="intelligence-auth-back" onClick={() => navigate("/")}>
+        <ArrowLeft size={17} /> Back to welcome
+      </button>
       {/* LEFT / BRAND PANEL */}
       <section className="intelligence-auth-brand">
         <div className="intelligence-brand-inner">

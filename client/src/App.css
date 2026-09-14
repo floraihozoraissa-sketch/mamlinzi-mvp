@@ -17,6 +17,21 @@
   }
 }
 
+@media (max-width: 460px) {
+  .public-nav {
+    gap: 8px;
+  }
+
+  .public-nav-emergency {
+    font-size: 12px !important;
+    padding: 0 10px !important;
+  }
+
+  .public-nav button {
+    padding: 0 10px;
+  }
+}
+
 .hero {
   position: relative;
 
@@ -167,7 +182,7 @@
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;

@@ -245,6 +245,10 @@
   cursor: pointer;
 }
 
+.mother-header-actions {
+  gap: 14px;
+}
+
 .mother-emergency-button {
   min-height: 38px;
   display: inline-flex;

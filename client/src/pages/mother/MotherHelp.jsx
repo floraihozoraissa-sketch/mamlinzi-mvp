@@ -61,7 +61,7 @@ function MotherHelp() {
 
         <section id="contact-chw" className="mother-help-card">
           <div className="mother-help-card-icon teal">
-            <MessageCircle size={22} />
+            <PhoneCall size={22} />
           </div>
           <div className="mother-help-card-content">
             <span className="mother-help-label">CONTACTING YOUR CHW</span>

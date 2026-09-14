@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ArrowLeft,
   ArrowRight,
   Eye,
   EyeOff,
@@ -29,41 +30,41 @@ function MotherLogin() {
     setLoading(true);
 
     try {
-    const { data, error: loginError } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error: loginError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-    if (loginError) {
-      setError("The email or password you entered is incorrect.");
-      setLoading(false);
-      return;
-    }
+      if (loginError) {
+        setError("The email or password you entered is incorrect.");
+        setLoading(false);
+        return;
+      }
 
-    const { data: profile, error: profileError } =
-      await supabase
-        .from("profiles")
-        .select("id, full_name, role")
-        .eq("id", data.user.id)
-        .single();
+      const { data: profile, error: profileError } =
+        await supabase
+          .from("profiles")
+          .select("id, full_name, role")
+          .eq("id", data.user.id)
+          .single();
 
-    if (profileError) {
-      console.error("PROFILE ERROR:", profileError);
-      setError("Could not load your MaMlinzi profile.");
-      await supabase.auth.signOut();
-      setLoading(false);
-      return;
-    }
+      if (profileError) {
+        console.error("PROFILE ERROR:", profileError);
+        setError("Could not load your MaMlinzi profile.");
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
 
-    if (profile.role !== "mother") {
-      setError("This account is not registered as a mother.");
-      await supabase.auth.signOut();
-      setLoading(false);
-      return;
-    }
+      if (profile.role !== "mother") {
+        setError("This account is not registered as a mother.");
+        await supabase.auth.signOut();
+        setLoading(false);
+        return;
+      }
 
-    navigate("/mother");
+      navigate("/mother");
     } catch (err) {
       console.error("MOTHER LOGIN ERROR:", err);
       setError("Something went wrong while signing you in. Please try again.");
@@ -74,6 +75,9 @@ function MotherLogin() {
   return (
     <main className="mother-auth-page">
       <PublicHeader />
+      <button type="button" className="mother-auth-back" onClick={() => navigate("/")}>
+        <ArrowLeft size={17} /> Back to welcome
+      </button>
       <section className="mother-auth-card">
         <div className="mother-auth-brand">
           <MamlinziLogo compact className="mother-auth-logo" />
