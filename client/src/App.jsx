@@ -31,6 +31,7 @@ function App() {
         <Route path="/contact" element={<PublicInfo type="contact" />} />
         <Route path="/signup" element={<RoleSelection />} />
         <Route path="/emergency" element={<EmergencyHelp />} />
+        <Route path="/emergency/" element={<EmergencyHelp />} />
 
         <Route
           path="/mother/login"

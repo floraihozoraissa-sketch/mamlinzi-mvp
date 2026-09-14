@@ -228,8 +228,13 @@
 }
 
 .mother-primary-button:disabled {
-  opacity: 0.65;
+  opacity: 1;
   cursor: not-allowed;
+}
+
+.mother-primary-button:disabled,
+.mother-primary-button:disabled * {
+  color: #fff;
 }
 
 .mother-button-spinner {
